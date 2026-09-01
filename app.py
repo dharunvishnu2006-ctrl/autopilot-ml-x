@@ -7,37 +7,14 @@ import altair as alt
 st.set_page_config(page_title="AutoPilot ML X", page_icon="🤖", layout="wide")
 st.markdown("""
 <style>
-.stApp {
-    background-color: #0a0e27;
-}
 .gradient-title {
-    background: linear-gradient(90deg, #fbbf24, #a855f7, #22d3ee);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-size: 3rem;
-    font-weight: 800;
-}
-.star {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #ffffff, transparent);
-    animation: twinkle 2s infinite;        
-} 
-@keyframes twinkle {
-    0% { opacity: 0.2; }
-    50% { opacity: 1; }
-    100% { opacity: 0.2; }
+    font-size: 3rem;             /* keep the size, drop the colour */
+    font-weight: 800;            /* keep the weight */
 }
 [data-testid="stMetric"] {
-    background: rgba(168, 85, 247, 0.08);
-    border: 1px solid #a855f7;
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 0 12px rgba(34, 211, 238, 0.4);
-}            
-                                   
+    border-radius: 12px;         /* keep the shape */
+    padding: 16px;               /* keep the spacing */
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -87,7 +64,7 @@ elif page == "Profiler":
             "missing_count": list(report["missing_values"].values())
         })
 
-        chart = alt.Chart(missing_df).mark_bar(color="#a855f7").encode(
+        chart = alt.Chart(missing_df).mark_bar().encode(
             x="column",
             y="missing_count"
         )
@@ -97,4 +74,4 @@ elif page == "About":
     st.markdown('<div class="gradient-title" style="font-size:2rem;">ℹ️ About AutoPilot ML X</div>', unsafe_allow_html=True)
     st.write("AutoPilot ML X is the data engine of a self-healing MLOps platform — it ingests CSV/JSON/Excel files concurrently with asyncio, auto-profiles any dataset, and exposes a Flask upload API, all wrapped in a clean @pipeline decorator.")
     st.markdown("**Tech Stack:** Python · asyncio · Pandas · Flask · pytest · Streamlit")
-    st.markdown("[💻 View on GitHub](https://github.com/dharunvishnu2006-ctrl/autopilot-ml-x-v1)")
+    st.markdown("[💻 View on GitHub](https://github.com/dharunvishnu2006-ctrl/autopilot-ml-x)")
