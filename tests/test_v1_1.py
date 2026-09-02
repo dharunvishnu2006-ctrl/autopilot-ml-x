@@ -4,6 +4,8 @@ from src.validation import DatasetSchema
 from pathlib import Path
 import json
 import pandas as pd
+import sqlite3
+from src.store import db, init_db, save_profile
 
 def test_bad_file_returns_typed_failure():
     result = asyncio.run(load_one("data/does_not_exist.txt"))
@@ -61,3 +63,40 @@ def test_date_column_detected():
     detected = detect_date_columns(df)
     assert "signup_date" in detected  
     assert "order_id" not in detected            
+
+def test_foreign_key_enforced():
+    init_db()
+    with db() as conn:
+        try:
+            conn.execute(
+                "INSERT INTO datasets "
+                "(run_id, name, rows, cols) "
+                "VALUES (?, ?, ?, ?)",
+                (999999, "ghost.csv", 1, 1))
+            assert False, "should have raised"
+        except sqlite3.IntegrityError:
+            pass                          
+
+def test_history_survives_reconnect():
+    init_db()
+    save_profile(run_id="hist1", source="persist.csv",
+                 rows=5, cols=1,
+                 column_stats=[{"name": "x", "dtype": "int64",
+                                "missing": 0}])
+    with db() as conn:
+        row = conn.execute(
+            "SELECT name FROM datasets "
+            "WHERE name = 'persist.csv'").fetchone()
+    assert row is not None
+    assert row[0] == "persist.csv"
+
+
+def test_index_is_used():
+    init_db()
+    with db() as conn:
+        plan = conn.execute(
+            "EXPLAIN QUERY PLAN "
+            "SELECT * FROM column_stats WHERE name = 'x'"
+        ).fetchall()
+    plan_text = str(plan)
+    assert "USING INDEX" in plan_text            
