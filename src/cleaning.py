@@ -38,3 +38,17 @@ def clean_text_column(series: pd.Series) -> dict:
     matches = cleaned.str.match(EMAIL_RE)
     fail_count = int((~matches.fillna(False)).sum())
     return {"cleaned": cleaned, "pattern_failures": fail_count}
+
+def flatten(data, prefix="", depth=0, max_depth=10):
+    if depth > max_depth:
+        raise ValueError(
+            f"max recursion depth {max_depth} exceeded")
+    result = {}
+    if isinstance(data, dict):
+        for key, value in data.items():
+            new_key = f"{prefix}.{key}" if prefix else key
+            result.update(
+                flatten(value, new_key, depth + 1, max_depth))
+    else:
+        result[prefix] = data
+    return result

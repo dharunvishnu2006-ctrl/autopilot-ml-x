@@ -99,4 +99,18 @@ def test_index_is_used():
             "SELECT * FROM column_stats WHERE name = 'x'"
         ).fetchall()
     plan_text = str(plan)
-    assert "USING INDEX" in plan_text            
+    assert "USING INDEX" in plan_text        
+
+def test_mutable_default_not_shared():
+    def collect(item, bucket=None):
+        if bucket is None:
+            bucket = []
+        bucket.append(item)
+        return bucket
+
+    r1 = collect("a")
+    r2 = collect("b")
+    r3 = collect("c")
+    assert r1 == ["a"]          
+    assert r2 == ["b"]
+    assert r3 == ["c"]        
