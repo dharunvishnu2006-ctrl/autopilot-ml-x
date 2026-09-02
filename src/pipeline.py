@@ -1,15 +1,26 @@
-import functools, time
+import functools
+import time
+from src.logging_setup import get_logger, generate_run_id
+
 
 def pipeline(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        print(f"▶ START {func.__name__}")
+        run_id = generate_run_id()       
+        log = get_logger(func.__module__, run_id=run_id)
+        log.info(f"START {func.__name__}")  
 
         start = time.time()
-        result = func(*args, **kwargs)
-        end = time.time()
+        try:
+            result = func(*args, **kwargs)
+        except Exception as e:
+            log.error(f"FAIL {func.__name__}: {e}")  
+            raise                            
+        finally:
+            elapsed = time.time() - start
+            log.info(f"DONE {func.__name__} "
+                      f"{elapsed*1000:.1f}ms")  
 
-        print(f"DONE in {end - start:.4f}s")
         return result
 
     return wrapper

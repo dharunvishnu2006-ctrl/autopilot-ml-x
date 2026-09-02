@@ -1,0 +1,25 @@
+{"ts": "2026-09-01T12:36:43.890551+00:00", "level": "INFO", "logger": "test", "run_id": "faf373df", "message": "hello world"}
+{"ts": "2026-09-01T12:47:28.784596+00:00", "level": "INFO", "logger": "__main__", "run_id": "2c126119", "message": "START add"}
+{"ts": "2026-09-01T12:47:28.785503+00:00", "level": "INFO", "logger": "__main__", "run_id": "2c126119", "message": "DONE add 0.0ms"}
+{"ts": "2026-09-01T12:48:03.021016+00:00", "level": "INFO", "logger": "__main__", "run_id": "1cb8e9a3", "message": "START broken"}
+{"ts": "2026-09-01T12:48:03.021486+00:00", "level": "ERROR", "logger": "__main__", "run_id": "1cb8e9a3", "message": "FAIL broken: something went wrong"}
+{"ts": "2026-09-01T12:48:03.021786+00:00", "level": "INFO", "logger": "__main__", "run_id": "1cb8e9a3", "message": "DONE broken 0.3ms"}
+{"ts": "2026-09-01T13:07:46.732232+00:00", "level": "INFO", "logger": "__main__", "run_id": "0688823d", "message": "START broken"}
+{"ts": "2026-09-01T13:07:46.732844+00:00", "level": "ERROR", "logger": "__main__", "run_id": "0688823d", "message": "FAIL broken: something went wrong"}
+{"ts": "2026-09-01T13:07:46.733308+00:00", "level": "INFO", "logger": "__main__", "run_id": "0688823d", "message": "DONE broken 0.5ms"}
+{"ts": "2026-09-01T13:42:14.929919+00:00", "level": "INFO", "logger": "src.profiler", "run_id": "391f36b3", "message": "START profile"}
+{"ts": "2026-09-01T13:42:14.965735+00:00", "level": "INFO", "logger": "src.profiler", "run_id": "391f36b3", "message": "DONE profile 35.2ms"}
+{"ts": "2026-09-01T13:45:57.216088+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "4e555537", "message": "START sample"}
+{"ts": "2026-09-01T13:45:57.216441+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "4e555537", "message": "DONE sample 0.0ms"}
+{"ts": "2026-09-01T13:54:30.611944+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "f0e34169", "message": "START sample"}
+{"ts": "2026-09-01T13:54:30.612302+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "f0e34169", "message": "DONE sample 0.0ms"}
+{"ts": "2026-09-01T13:55:58.574565+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "5a05afc5", "message": "START sample"}
+{"ts": "2026-09-01T13:55:58.574974+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "5a05afc5", "message": "DONE sample 0.0ms"}
+{"ts": "2026-09-01T13:58:17.254192+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "05dc4a61", "message": "START sample"}
+{"ts": "2026-09-01T13:58:17.254496+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "05dc4a61", "message": "DONE sample 0.0ms"}
+{"ts": "2026-09-01T14:00:06.130795+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "5fad89f5", "message": "START sample"}
+{"ts": "2026-09-01T14:00:06.131260+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "5fad89f5", "message": "DONE sample 0.0ms"}
+{"ts": "2026-09-01T14:04:19.649808+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "a00633e2", "message": "START sample"}
+{"ts": "2026-09-01T14:04:19.650141+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "a00633e2", "message": "DONE sample 0.0ms"}
+{"ts": "2026-09-01T14:06:09.318227+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "abe0cb63", "message": "START sample"}
+{"ts": "2026-09-01T14:06:09.319108+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "abe0cb63", "message": "DONE sample 0.0ms"}

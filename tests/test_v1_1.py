@@ -1,7 +1,9 @@
 import asyncio
 from src.ingest import load_one, ingest_all
 from src.validation import DatasetSchema
-
+from pathlib import Path
+import json
+import pandas as pd
 
 def test_bad_file_returns_typed_failure():
     result = asyncio.run(load_one("data/does_not_exist.txt"))
@@ -26,3 +28,36 @@ def test_schema_rejects_bad_row():
         assert False, "should have raised"
     except Exception as e:
         assert "bad.csv" in str(e)         
+
+def test_no_print_in_src():
+    for py_file in Path("src").glob("*.py"):
+        text = py_file.read_text(encoding="utf-8")
+        assert "print(" not in text, (
+            f"print() found in {py_file}")
+
+def test_log_line_is_valid_json(capsys):
+    from src.pipeline import pipeline
+
+    @pipeline
+    def sample():
+        return 1
+
+    sample()
+    captured = capsys.readouterr()
+    lines = [ln for ln in captured.out.strip().split("\n") if ln]
+    for line in lines:
+        parsed = json.loads(line)   
+        assert "run_id" in parsed
+        assert "ts" in parsed            
+
+def test_date_column_detected():
+    from src.cleaning import detect_date_columns
+
+    df = pd.DataFrame({
+        "signup_date": ["2024-01-15", "2024-02-03",
+                         "2024-03-10", "2024-04-22"],
+        "order_id": ["1001", "1002", "1003", "1004"],
+    })
+    detected = detect_date_columns(df)
+    assert "signup_date" in detected  
+    assert "order_id" not in detected            
