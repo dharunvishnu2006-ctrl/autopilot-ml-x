@@ -6,6 +6,8 @@ import json
 import pandas as pd
 import sqlite3
 from src.store import db, init_db, save_profile
+from src.sources import source_for, CSVSource, JSONSource, ExcelSource
+
 
 def test_bad_file_returns_typed_failure():
     result = asyncio.run(load_one("data/does_not_exist.txt"))
@@ -114,3 +116,21 @@ def test_mutable_default_not_shared():
     assert r1 == ["a"]          
     assert r2 == ["b"]
     assert r3 == ["c"]        
+
+def test_source_rejects_wrong_suffix():
+    try:
+        CSVSource("data/sample_orders.xlsx")
+        assert False, "should have raised"
+    except ValueError as e:
+        assert "cannot read" in str(e)
+
+
+def test_factory_dispatches_all_formats():
+    assert isinstance(source_for("data/x.csv"), CSVSource)
+    assert isinstance(source_for("data/x.json"), JSONSource)
+    assert isinstance(source_for("data/x.xlsx"), ExcelSource)
+    try:
+        source_for("data/x.parquet")
+        assert False, "should have raised"
+    except ValueError as e:
+        assert "Unsupported format" in str(e)    

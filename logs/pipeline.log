@@ -29,3 +29,9 @@
 {"ts": "2026-09-02T12:29:33.432332+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "a0d50a09", "message": "DONE sample 0.0ms"}
 {"ts": "2026-09-02T12:54:13.873859+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "73d93542", "message": "START sample"}
 {"ts": "2026-09-02T12:54:13.874627+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "73d93542", "message": "DONE sample 0.0ms"}
+{"ts": "2026-09-03T05:17:38.633938+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "e5746534", "message": "START sample"}
+{"ts": "2026-09-03T05:17:38.634704+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "e5746534", "message": "DONE sample 0.0ms"}
+{"ts": "2026-09-03T05:20:24.987565+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "d0adb651", "message": "START sample"}
+{"ts": "2026-09-03T05:20:24.988061+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "d0adb651", "message": "DONE sample 0.0ms"}
+{"ts": "2026-09-03T06:26:01.628588+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "2da49cf4", "message": "START sample"}
+{"ts": "2026-09-03T06:26:01.629134+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "2da49cf4", "message": "DONE sample 0.0ms"}
