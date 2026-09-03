@@ -1,6 +1,7 @@
 from src.pipeline import pipeline
 from src.cleaning import detect_date_columns, parse_date_columns
-
+from functools import lru_cache
+import pandas as pd
 
 @pipeline
 def profile(df) -> dict:
@@ -19,3 +20,12 @@ def profile(df) -> dict:
     }
 
     return report
+
+@lru_cache(maxsize=32)
+def deep_profile_by_path(path: str) -> dict:
+    df = pd.read_csv(path)      
+    return {
+        "rows": df.shape[0],
+        "missing": int(df.isnull().sum().sum()),
+        "mean_amount": float(df["amount"].mean()),
+    }    

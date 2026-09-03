@@ -134,3 +134,23 @@ def test_factory_dispatches_all_formats():
         assert False, "should have raised"
     except ValueError as e:
         assert "Unsupported format" in str(e)    
+
+def test_rollback_leaves_nothing():
+    from src.store import db, init_db
+    init_db()
+    try:
+        with db() as conn:
+            conn.execute(
+                "INSERT INTO runs "
+                "(run_id, started_at, source) "
+                "VALUES (?, ?, ?)",
+                ("rollback_test", "2026-01-01", "x.csv"))
+            raise ValueError("simulated failure")
+    except ValueError:
+        pass
+
+    with db() as conn:
+        row = conn.execute(
+            "SELECT * FROM runs WHERE run_id = 'rollback_test'"
+        ).fetchone()
+    assert row is None        
