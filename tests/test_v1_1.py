@@ -154,3 +154,17 @@ def test_rollback_leaves_nothing():
             "SELECT * FROM runs WHERE run_id = 'rollback_test'"
         ).fetchone()
     assert row is None        
+
+def test_streaming_matches_full_read():
+    from src.streaming import profile_streaming
+    import pandas as pd
+
+    df = pd.read_csv("data/sample_orders.csv")
+    streamed = profile_streaming(
+        "data/sample_orders.csv", chunk_size=1)
+
+    assert streamed["rows"] == df.shape[0]
+    assert streamed["missing"]["amount"] == int(
+        df["amount"].isna().sum())
+    expected_mean = float(df["amount"].mean())
+    assert abs(streamed["means"]["amount"] - expected_mean) < 0.01    
