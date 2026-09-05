@@ -7,3 +7,4 @@ reports/
 logs/
 data/big_orders.csv
 data/bench_*.csv
+profile_output.txt
