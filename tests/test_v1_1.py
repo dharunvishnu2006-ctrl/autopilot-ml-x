@@ -168,3 +168,20 @@ def test_streaming_matches_full_read():
         df["amount"].isna().sum())
     expected_mean = float(df["amount"].mean())
     assert abs(streamed["means"]["amount"] - expected_mean) < 0.01    
+
+def test_concurrent_beats_serial():
+    import time
+    from src.concurrency import ingest_all_threads
+    from src.ingest import ingest_all
+
+    paths = [f"data/bench_{i}.csv" for i in range(8)]
+
+    t0 = time.perf_counter()
+    asyncio.run(ingest_all(paths))
+    shipped_time = time.perf_counter() - t0
+
+    t0 = time.perf_counter()
+    asyncio.run(ingest_all_threads(paths))
+    threads_time = time.perf_counter() - t0
+
+    assert threads_time < shipped_time    
