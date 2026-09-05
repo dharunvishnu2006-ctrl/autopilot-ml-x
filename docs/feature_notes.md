@@ -31,3 +31,18 @@ for benchmarking and comparison.
 **Important:** `load_one()` has **not yet been changed to call `ingest_all_threads()`**. It still works the same way it did before E8.
 
 The next integration step is to wire the threaded ingestion into the real pipeline so the production ingestion path can actually use the performance improvement. Until then, E8's threading implementation is **proven and measured, but not yet connected to the main pipeline**.
+
+
+## E9 — NumPy Vectorized Statistics
+
+### How
+
+Added NumPy vectorization for mean, std, p50, p95, and IQR-based outlier counts. Measured a **146.5× speedup** over a Python loop, tested the NaN problem and chose a **drop-first policy**, and measured the memory difference between **float64 (8 MB)** and **float32 (4 MB)**.
+
+### Why
+
+Before E9, **NumPy was completely missing** from the project. For an ML platform, that was a real gap because NumPy provides the **core numerical foundation** that future ML models and calculations in v3+ will depend on.
+
+### Where
+
+Implemented in `column_stats()` as part of the project’s **data profiling/statistics path**.
