@@ -47,3 +47,11 @@
 {"ts": "2026-09-05T06:56:27.257434+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "831bccb5", "message": "DONE sample 0.0ms"}
 {"ts": "2026-09-05T08:08:16.935057+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "be850bb1", "message": "START sample"}
 {"ts": "2026-09-05T08:08:16.935244+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "be850bb1", "message": "DONE sample 0.0ms"}
+{"ts": "2026-09-05T08:26:10.674939+00:00", "level": "INFO", "logger": "src.profiler", "run_id": "4b97fca8", "message": "START profile"}
+{"ts": "2026-09-05T08:26:10.689670+00:00", "level": "INFO", "logger": "src.profiler", "run_id": "4b97fca8", "message": "DONE profile 14.4ms"}
+{"ts": "2026-09-05T10:37:21.783250+00:00", "level": "INFO", "logger": "src.profiler", "run_id": "6c2e24eb", "message": "START profile"}
+{"ts": "2026-09-05T10:37:21.797599+00:00", "level": "INFO", "logger": "src.profiler", "run_id": "6c2e24eb", "message": "DONE profile 14.0ms"}
+{"ts": "2026-09-05T10:39:37.618348+00:00", "level": "INFO", "logger": "src.profiler", "run_id": "12d76885", "message": "START profile"}
+{"ts": "2026-09-05T10:39:37.626120+00:00", "level": "INFO", "logger": "src.profiler", "run_id": "12d76885", "message": "DONE profile 7.5ms"}
+{"ts": "2026-09-05T10:48:38.498334+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "bfb71043", "message": "START sample"}
+{"ts": "2026-09-05T10:48:38.498520+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "bfb71043", "message": "DONE sample 0.0ms"}

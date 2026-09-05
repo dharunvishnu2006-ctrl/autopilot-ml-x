@@ -61,3 +61,12 @@ To uncover **data-quality problems hidden by overall averages** and track meanin
 ### Where
 
 Defined in the **data profiling/statistics code**, through `profile_by_group()` and `compare_runs()`. They are currently **proven and tested but not yet wired into the real pipeline or dashboard**; the tests are currently the only callers.
+
+
+E11 — Dashboard Visualization & Integration
+How
+Added Matplotlib, Seaborn, and Plotly charts, fixed the plotting type bug, and made them work in both light and dark themes. Rewired uploads through `save_uploaded_file()` → `source_for()`.
+Why
+To fix two real dashboard problems: the hard-coded dark background made the dashboard hard to read in light mode, and directly using pd.read_csv(uploaded_file) bypassed source_for(), meaning dashboard uploads skipped the project's normal logging and instrumentation path.
+Where
+Used in `app.py`, where uploaded datasets are processed and visualized through the dashboard.

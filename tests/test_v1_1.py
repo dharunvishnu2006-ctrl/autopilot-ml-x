@@ -221,3 +221,24 @@ def test_outer_join_keeps_new_column():
     new_row = result[result["name"] == "b"]
     assert len(new_row) == 1
     assert new_row["status"].iloc[0] == "NEW COLUMN"    
+
+def test_dashboard_charts_run_without_error():
+    import pandas as pd
+    from src.dashboard import (missing_values_chart,
+                                column_detail_grid,
+                                correlation_heatmap,
+                                outlier_boxplot)
+
+    df = pd.read_csv("data/sample_orders.csv")
+
+    fig1 = missing_values_chart(df)
+    assert fig1 is not None
+
+    fig2 = column_detail_grid(df, "city")
+    assert fig2 is not None
+
+    fig3 = correlation_heatmap(df)
+    assert fig3 is not None
+
+    fig4 = outlier_boxplot(df, "amount")
+    assert fig4 is not None    
