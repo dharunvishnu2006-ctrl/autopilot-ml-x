@@ -185,3 +185,25 @@ def test_concurrent_beats_serial():
     threads_time = time.perf_counter() - t0
 
     assert threads_time < shipped_time    
+
+def test_vectorised_matches_loop():
+    import numpy as np
+    values = np.random.uniform(0, 1000, 10_000)
+
+    total = 0.0
+    for v in values:
+        total += v
+    loop_mean = total / len(values)
+
+    vec_mean = values.mean()
+    assert abs(loop_mean - vec_mean) < 0.0001
+
+
+def test_nan_policy_is_explicit():
+    import numpy as np
+    from src.numeric import column_stats
+
+    data = np.array([1.0, 2.0, np.nan, 4.0])
+    result = column_stats(data)
+    assert result["n"] == 3
+    assert not (result["mean"] != result["mean"])    
