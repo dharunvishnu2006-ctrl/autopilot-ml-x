@@ -39,3 +39,7 @@
 {"ts": "2026-09-03T07:17:36.896307+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "bf75925d", "message": "DONE sample 0.0ms"}
 {"ts": "2026-09-03T07:39:12.402690+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "cdcff731", "message": "START sample"}
 {"ts": "2026-09-03T07:39:12.403023+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "cdcff731", "message": "DONE sample 0.0ms"}
+{"ts": "2026-09-04T09:47:38.679561+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "1e675e5a", "message": "START sample"}
+{"ts": "2026-09-04T09:47:38.679733+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "1e675e5a", "message": "DONE sample 0.0ms"}
+{"ts": "2026-09-05T05:54:12.024219+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "dfe880d4", "message": "START sample"}
+{"ts": "2026-09-05T05:54:12.024641+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "dfe880d4", "message": "DONE sample 0.0ms"}
