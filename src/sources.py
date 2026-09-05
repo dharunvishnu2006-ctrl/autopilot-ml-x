@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 import pandas as pd
+import tempfile
 
 
 class DataSource(ABC):
@@ -98,3 +99,10 @@ class DeepProfile(ProfileStrategy):
             "missing": df.isnull().sum().to_dict(),
             "numeric_summary": df.describe().to_dict(),
         }    
+
+def save_uploaded_file(uploaded_file) -> Path:
+    suffix = Path(uploaded_file.name).suffix
+    with tempfile.NamedTemporaryFile(
+            delete=False, suffix=suffix) as tmp:
+        tmp.write(uploaded_file.getvalue())
+        return Path(tmp.name)    

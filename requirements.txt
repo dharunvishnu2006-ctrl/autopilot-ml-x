@@ -5,3 +5,7 @@ altair==6.2.2
 aiofiles==25.1.0
 pydantic==2.13.5
 pytest==9.1.1
+matplotlib==3.11.1
+seaborn==0.13.2
+plotly==7.0.0
+kaleido==1.4.0
