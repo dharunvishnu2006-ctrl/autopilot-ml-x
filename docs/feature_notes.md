@@ -46,3 +46,18 @@ Before E9, **NumPy was completely missing** from the project. For an ML platform
 ### Where
 
 Implemented in `column_stats()` as part of the project’s **data profiling/statistics path**.
+
+
+## E10 — Grouped Profiling & Run Comparison
+
+### How
+
+Built `profile_by_group()` for segment-level statistics and `compare_runs()` using outer joins to detect dataset changes. Also caught the silent-drop problem with `how="inner"`.
+
+### Why
+
+To uncover **data-quality problems hidden by overall averages** and track meaningful changes between dataset runs.
+
+### Where
+
+Defined in the **data profiling/statistics code**, through `profile_by_group()` and `compare_runs()`. They are currently **proven and tested but not yet wired into the real pipeline or dashboard**; the tests are currently the only callers.

@@ -207,3 +207,17 @@ def test_nan_policy_is_explicit():
     result = column_stats(data)
     assert result["n"] == 3
     assert not (result["mean"] != result["mean"])    
+
+def test_outer_join_keeps_new_column():
+    import pandas as pd
+    from src.analysis import compare_runs
+
+    current = pd.DataFrame({
+        "name": ["a", "b"], "missing_now": [1, 2]})
+    previous = pd.DataFrame({
+        "name": ["a"], "missing_before": [1]})
+
+    result = compare_runs(current, previous)
+    new_row = result[result["name"] == "b"]
+    assert len(new_row) == 1
+    assert new_row["status"].iloc[0] == "NEW COLUMN"    

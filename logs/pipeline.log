@@ -45,3 +45,5 @@
 {"ts": "2026-09-05T05:54:12.024641+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "dfe880d4", "message": "DONE sample 0.0ms"}
 {"ts": "2026-09-05T06:56:27.257223+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "831bccb5", "message": "START sample"}
 {"ts": "2026-09-05T06:56:27.257434+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "831bccb5", "message": "DONE sample 0.0ms"}
+{"ts": "2026-09-05T08:08:16.935057+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "be850bb1", "message": "START sample"}
+{"ts": "2026-09-05T08:08:16.935244+00:00", "level": "INFO", "logger": "test_v1_1", "run_id": "be850bb1", "message": "DONE sample 0.0ms"}
