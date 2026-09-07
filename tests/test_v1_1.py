@@ -7,7 +7,7 @@ import pandas as pd
 import sqlite3
 from src.store import db, init_db, save_profile
 from src.sources import source_for, CSVSource, JSONSource, ExcelSource
-
+import re
 
 def test_bad_file_returns_typed_failure():
     result = asyncio.run(load_one("data/does_not_exist.txt"))
@@ -32,11 +32,11 @@ def test_schema_rejects_bad_row():
         assert False, "should have raised"
     except Exception as e:
         assert "bad.csv" in str(e)         
-
 def test_no_print_in_src():
+    pattern = re.compile(r"(?<![a-zA-Z_])print\(")
     for py_file in Path("src").glob("*.py"):
         text = py_file.read_text(encoding="utf-8")
-        assert "print(" not in text, (
+        assert not pattern.search(text), (
             f"print() found in {py_file}")
 
 def test_log_line_is_valid_json(capsys):
@@ -242,3 +242,19 @@ def test_dashboard_charts_run_without_error():
 
     fig4 = outlier_boxplot(df, "amount")
     assert fig4 is not None    
+
+def test_fingerprint_is_deterministic():
+    from src.security import fingerprint
+    h1 = fingerprint("data/sample_orders.csv")
+    h2 = fingerprint("data/sample_orders.csv")
+    assert h1 == h2
+    assert len(h1) == 64
+
+
+def test_enrichment_degrades_gracefully():
+    from src.enrichment import fetch_with_retry
+    result = fetch_with_retry(
+        "https://this-domain-does-not-exist-12345.com/api",
+        max_attempts=2)
+    assert result["status"] == "UNAVAILABLE"
+    assert "error" in result    
