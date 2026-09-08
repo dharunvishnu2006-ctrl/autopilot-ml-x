@@ -8,6 +8,8 @@ import sqlite3
 from src.store import db, init_db, save_profile
 from src.sources import source_for, CSVSource, JSONSource, ExcelSource
 import re
+import pytest
+from src.summarizer import verify, summarize
 
 
 def test_bad_file_returns_typed_failure():
@@ -291,3 +293,52 @@ def test_enrichment_degrades_gracefully():
     )
     assert result["status"] == "UNAVAILABLE"
     assert "error" in result
+
+
+class MockLLMClient:
+    def __init__(self, response: str):
+        self.response = response
+
+    def generate(self, prompt: str) -> str:
+        return self.response
+
+
+class BrokenLLMClient:
+    def generate(self, prompt: str) -> str:
+        raise ConnectionError("API is down")
+
+
+_CTX = {
+    "name": "orders.csv",
+    "rows": 100,
+    "cols": 5,
+    "worst_missing": "amount (12%)",
+    "outliers": 3,
+    "changed": "none",
+}
+
+
+@pytest.mark.parametrize(
+    "summary,expected",
+    [
+        ("100 rows, 5 columns, 3 outliers.", True),
+        ("100 rows, 5 columns, 999 outliers.", False),
+        ("This mentions 47% missing values.", False),  # invented %
+        ("Everything looks fine.", True),
+        ("", True),
+    ],
+)
+def test_verify_parametrized(summary, expected):
+    assert verify(summary, _CTX) == expected
+
+
+def test_summary_rejects_invented_number():
+    client = MockLLMClient("100 rows but 500 duplicate rows found.")
+    result = summarize(_CTX, client)
+    assert result == str(_CTX)
+
+
+def test_summary_survives_api_failure():
+    client = BrokenLLMClient()
+    result = summarize(_CTX, client)
+    assert result == str(_CTX)
