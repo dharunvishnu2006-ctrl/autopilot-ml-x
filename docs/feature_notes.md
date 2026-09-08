@@ -70,3 +70,18 @@ Why
 To fix two real dashboard problems: the hard-coded dark background made the dashboard hard to read in light mode, and directly using pd.read_csv(uploaded_file) bypassed source_for(), meaning dashboard uploads skipped the project's normal logging and instrumentation path.
 Where
 Used in `app.py`, where uploaded datasets are processed and visualized through the dashboard.
+
+E13 — Quality Gates & Security
+How
+
+* Added pre-commit hooks for black, flake8, mypy, and bandit.
+* Fixed the real issues those tools found: debug mode, type errors, lint errors, BOM encoding, and line-length conflicts.
+* Retired the obsolete `test_invalid_file_rejected` test.
+* Added `scripts/check.sh` to run the complete quality gate.
+* Completed the first branch → PR → review → merge cycle.
+
+Why
+To catch security, typing, formatting, and code-quality problems automatically before they reach the main branch. This also fixed a real `debug=True` security vulnerability and removed a fake-passing test that could give false confidence.
+Where
+The checks run across the project through pre-commit and `scripts/check.sh`. The fixes covered `api.py`, configuration, tests, and other source files. The workflow is now enforced through the Git/PR process.
+Result: 25 tests passing; flake8 21 → 0, mypy 7 → 0, bandit 62 findings → 0.
