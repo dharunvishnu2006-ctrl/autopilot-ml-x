@@ -1,0 +1,97 @@
+{
+  "versions": [
+    {
+      "version": "v1.0",
+      "status": "shipped",
+      "colour": "#a855f7",
+      "steps": "1-80",
+      "completion": 13,
+      "description": "Foundation - async ingestion sprint",
+      "features": [
+        "Async Data Ingestion",
+        "Data Profiler",
+        "@pipeline Decorator",
+        "Flask Upload API",
+        "Streamlit Dashboard"
+      ],
+      "tests": 5,
+      "steps_covered": 28,
+      "bugs_fixed": []
+    },
+    {
+      "version": "v1.1",
+      "status": "shipped",
+      "colour": "#a855f7",
+      "steps": "1-80",
+      "completion": 13,
+      "tests": 28,
+      "steps_covered": 80,
+      "description": "Completion - all 80 steps built",
+      "features": [
+        "E1: Typed Dataset Records",
+        "E2: Structured Logging + Text Cleaning",
+        "E3: The Metadata Store",
+        "E4: Python Craft",
+        "E5: The DataSource Hierarchy",
+        "E6: Decorators, Context Managers, Caching",
+        "E7: Streaming Large Datasets",
+        "E8: Concurrency Measured",
+        "E9: NumPy Vectorised Profiling",
+        "E10: Pandas Deep Profiling",
+        "E11: The Real Dashboard",
+        "E12: External Data Enrichment",
+        "E13: Engineering Discipline",
+        "E14: LLM-Assisted Profile Summaries",
+        "E15: Consolidation"
+      ],
+      "bugs_fixed": [
+        "async ingestion awaited nothing - gather ran serially (ADR 003)",
+        "load_one() returned None, crashing profile() - IngestResult added",
+        "test_invalid_file_rejected passed on [None] - rewritten and retired",
+        "print() instead of logging - structured JSON logging added",
+        "hard-coded dark theme - unreadable in light mode",
+        "dispatch copied in 3 files - DataSource hierarchy (ADR 001)"
+      ]
+    },
+    {
+      "version": "v2",
+      "status": "planned",
+      "colour": "#10b981",
+      "steps": "81-173",
+      "completion": 29,
+      "description": "Data structures + SQL feature store"
+    },
+    {
+      "version": "v3",
+      "status": "planned",
+      "colour": "#f59e0b",
+      "steps": "174-280",
+      "completion": 47,
+      "description": "AutoML engine - maths, models, MLflow"
+    },
+    {
+      "version": "v4",
+      "status": "planned",
+      "colour": "#ec4899",
+      "steps": "281-413",
+      "completion": 69,
+      "description": "Cloud MLOps - Docker, AWS, CI/CD"
+    },
+    {
+      "version": "v5",
+      "status": "planned",
+      "colour": "#a78bfa",
+      "steps": "414-550",
+      "completion": 92,
+      "description": "Self-healing - drift, retraining, GenAI"
+    },
+    {
+      "version": "v6",
+      "status": "planned",
+      "colour": "#a3e635",
+      "steps": "551-600",
+      "completion": 100,
+      "description": "Production AI Factory - Kubernetes, monitoring"
+    }
+  ]
+}
