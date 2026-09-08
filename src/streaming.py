@@ -11,12 +11,13 @@ def read_rows(path: str):
     for chunk in read_chunks(path, chunk_size=1):
         yield chunk.iloc[0]
 
+
 def profile_streaming(path: str, chunk_size: int = 50_000) -> dict:
     n = 0
-    missing = defaultdict(int)
-    total = defaultdict(float)
-    lo = {}
-    hi = {}
+    missing: dict[str, int] = defaultdict(int)
+    total: dict[str, float] = defaultdict(float)
+    lo: dict[str, float] = {}
+    hi: dict[str, float] = {}
 
     for chunk in read_chunks(path, chunk_size):
         n += len(chunk)
@@ -29,8 +30,14 @@ def profile_streaming(path: str, chunk_size: int = 50_000) -> dict:
                 lo[col] = min(lo.get(col, col_min), col_min)
                 hi[col] = max(hi.get(col, col_max), col_max)
 
-    means = {col: total[col] / (n - missing[col])
-             for col in total if (n - missing[col]) > 0}
+    means = {
+        col: total[col] / (n - missing[col]) for col in total if (n - missing[col]) > 0
+    }
 
-    return {"rows": n, "missing": dict(missing),
-            "means": means, "min": lo, "max": hi}        
+    return {
+        "rows": n,
+        "missing": dict(missing),
+        "means": means,
+        "min": lo,
+        "max": hi,
+    }

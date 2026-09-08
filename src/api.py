@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
 import pandas as pd
 from src.profiler import profile
+import os
 
 app = Flask(__name__)
+
 
 @app.route("/upload", methods=["POST"])
 def upload():
@@ -24,5 +26,7 @@ def upload():
     report = profile(df)
     return jsonify(report)
 
+
 if __name__ == "__main__":
-       app.run(debug=True, use_reloader=False)
+    debug = os.environ.get("FLASK_DEBUG", "False") == "True"
+    app.run(debug=debug, use_reloader=False)

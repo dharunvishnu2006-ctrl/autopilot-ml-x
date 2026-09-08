@@ -10,3 +10,10 @@ seaborn==0.13.2
 plotly==7.0.0
 kaleido==1.4.0
 python-dotenv==1.2.3
+pre-commit==4.6.2
+black==26.5.1
+flake8==7.3.0
+mypy==2.3.1
+bandit==1.9.4
+pandas-stubs==3.0.5.260730
+types-seaborn==0.13.2.20260728
