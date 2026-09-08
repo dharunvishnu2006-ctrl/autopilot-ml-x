@@ -4,8 +4,7 @@ import os
 from dotenv import load_dotenv
 
 
-def fetch_with_retry(url: str, max_attempts: int = 3,
-                      timeout: float = 5.0) -> dict:
+def fetch_with_retry(url: str, max_attempts: int = 3, timeout: float = 5.0) -> dict:
     for attempt in range(1, max_attempts + 1):
         try:
             response = requests.get(url, timeout=timeout)
@@ -14,12 +13,13 @@ def fetch_with_retry(url: str, max_attempts: int = 3,
         except requests.RequestException as e:
             if attempt == max_attempts:
                 return {"status": "UNAVAILABLE", "error": str(e)}
-            wait = 2 ** attempt
+            wait = 2**attempt
             time.sleep(wait)
     return {"status": "UNAVAILABLE", "error": "unreachable"}
+
 
 load_dotenv()
 
 
 def get_api_key() -> str | None:
-    return os.environ.get("ENRICHMENT_API_KEY")    
+    return os.environ.get("ENRICHMENT_API_KEY")

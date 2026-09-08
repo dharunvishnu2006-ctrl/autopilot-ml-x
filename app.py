@@ -1,14 +1,17 @@
 import streamlit as st
-import pandas as pd
 from src.profiler import profile
 from src.sources import source_for, save_uploaded_file
-from src.dashboard import (missing_values_chart, column_detail_grid,
-                            correlation_heatmap, outlier_boxplot,
-                            interactive_scatter)
+from src.dashboard import (
+    missing_values_chart,
+    column_detail_grid,
+    correlation_heatmap,
+    outlier_boxplot,
+    interactive_scatter,
+)
 
-st.set_page_config(page_title="AutoPilot ML X", page_icon="🤖",
-                    layout="wide")
-st.markdown("""
+st.set_page_config(page_title="AutoPilot ML X", page_icon="🤖", layout="wide")
+st.markdown(
+    """
 <style>
 .gradient-title {
     font-size: 3rem;
@@ -19,25 +22,33 @@ st.markdown("""
     padding: 16px;
 }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
-st.markdown('<div class="gradient-title">🤖 AutoPilot ML X</div>',
-            unsafe_allow_html=True)
+st.markdown(
+    '<div class="gradient-title">🤖 AutoPilot ML X</div>',
+    unsafe_allow_html=True,
+)
 st.markdown("v1 of 6 · Self-Healing MLOps Platform")
 
 page = st.sidebar.radio("Navigate", ["Dashboard", "Profiler", "About"])
 
 if page == "Dashboard":
-    st.write("Welcome to AutoPilot ML X — your async data ingestion "
-             "and profiling engine.")
-    st.write("Use the sidebar to upload a dataset on the **Profiler** "
-             "page, or learn more on the **About** page.")
+    st.write(
+        "Welcome to AutoPilot ML X — your async data ingestion " "and profiling engine."
+    )
+    st.write(
+        "Use the sidebar to upload a dataset on the **Profiler** "
+        "page, or learn more on the **About** page."
+    )
 
 elif page == "Profiler":
-    st.markdown('<div class="gradient-title" style="font-size:2rem;">'
-                '📊 Data Profiler</div>', unsafe_allow_html=True)
-    uploaded_file = st.file_uploader(
-        "Upload a dataset", type=["csv", "json", "xlsx"])
+    st.markdown(
+        '<div class="gradient-title" style="font-size:2rem;">' "📊 Data Profiler</div>",
+        unsafe_allow_html=True,
+    )
+    uploaded_file = st.file_uploader("Upload a dataset", type=["csv", "json", "xlsx"])
 
     if uploaded_file is not None:
         temp_path = save_uploaded_file(uploaded_file)
@@ -72,8 +83,7 @@ elif page == "Profiler":
         st.subheader("Outlier Check")
         numeric_cols = df.select_dtypes(include="number").columns
         if len(numeric_cols) > 0:
-            outlier_col = st.selectbox(
-                "Choose a numeric column", numeric_cols)
+            outlier_col = st.selectbox("Choose a numeric column", numeric_cols)
             fig4 = outlier_boxplot(df, outlier_col)
             st.pyplot(fig4)
 
@@ -88,15 +98,23 @@ elif page == "Profiler":
         st.json(report)
 
 elif page == "About":
-    st.markdown('<div class="gradient-title" style="font-size:2rem;">'
-                'ℹ️ About AutoPilot ML X</div>', unsafe_allow_html=True)
-    st.write("AutoPilot ML X is the data engine of a self-healing "
-             "MLOps platform — it ingests CSV/JSON/Excel files "
-             "concurrently with asyncio, auto-profiles any dataset, "
-             "and exposes a Flask upload API, all wrapped in a clean "
-             "@pipeline decorator.")
-    st.markdown("**Tech Stack:** Python · asyncio · Pandas · Flask · "
-                "pytest · Streamlit")
-    st.markdown("[💻 View on GitHub]"
-                "(https://github.com/dharunvishnu2006-ctrl/"
-                "autopilot-ml-x)")
+    st.markdown(
+        '<div class="gradient-title" style="font-size:2rem;">'
+        "ℹ️ About AutoPilot ML X</div>",
+        unsafe_allow_html=True,
+    )
+    st.write(
+        "AutoPilot ML X is the data engine of a self-healing "
+        "MLOps platform — it ingests CSV/JSON/Excel files "
+        "concurrently with asyncio, auto-profiles any dataset, "
+        "and exposes a Flask upload API, all wrapped in a clean "
+        "@pipeline decorator."
+    )
+    st.markdown(
+        "**Tech Stack:** Python · asyncio · Pandas · Flask · " "pytest · Streamlit"
+    )
+    st.markdown(
+        "[💻 View on GitHub]"
+        "(https://github.com/dharunvishnu2006-ctrl/"
+        "autopilot-ml-x)"
+    )
