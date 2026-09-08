@@ -6,21 +6,17 @@ from src.profiler import profile
 from src.pipeline import pipeline
 
 
-def test_ingest_returns_dataframes():
-    result = asyncio.run(
-        ingest_all(["data/sample_orders.csv"])
-    )
+def test_ingest_returns_results():
+    result = asyncio.run(ingest_all(["data/sample_orders.csv"]))
 
     assert isinstance(result, list)
     assert len(result) > 0
-    assert isinstance(result[0], pd.DataFrame)
+    assert result[0].ok is True
+    assert isinstance(result[0].frame, pd.DataFrame)
 
 
 def test_profiler_reports_shape():
-    df = pd.DataFrame({
-        "name": ["Alice", "Bob"],
-        "age": [25, 30]
-    })
+    df = pd.DataFrame({"name": ["Alice", "Bob"], "age": [25, 30]})
 
     report = profile(df)
 
@@ -29,10 +25,7 @@ def test_profiler_reports_shape():
 
 
 def test_profiler_counts_missing():
-    df = pd.DataFrame({
-        "name": ["Alice", None],
-        "age": [25, 30]
-    })
+    df = pd.DataFrame({"name": ["Alice", None], "age": [25, 30]})
 
     report = profile(df)
 
@@ -46,11 +39,3 @@ def test_pipeline_keeps_result():
         return a + b
 
     assert add(3, 4) == 7
-
-
-def test_invalid_file_rejected():
-    result = asyncio.run(
-        ingest_all(["data/does_not_exist.txt"])
-    )
-
-    assert isinstance(result, list)

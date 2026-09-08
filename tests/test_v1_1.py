@@ -9,35 +9,45 @@ from src.store import db, init_db, save_profile
 from src.sources import source_for, CSVSource, JSONSource, ExcelSource
 import re
 
+
 def test_bad_file_returns_typed_failure():
     result = asyncio.run(load_one("data/does_not_exist.txt"))
-    assert result.ok is False              
-    assert "does_not_exist" in result.error  
-    assert result.frame is None           
+    assert result.ok is False
+    assert "does_not_exist" in result.error
+    assert result.frame is None
+
 
 def test_run_survives_one_bad_file():
-    paths = ["data/sample_orders.csv",
-             "data/does_not_exist.txt",
-             "data/sample_orders.csv"]
+    paths = [
+        "data/sample_orders.csv",
+        "data/does_not_exist.txt",
+        "data/sample_orders.csv",
+    ]
     results = asyncio.run(ingest_all(paths))
     oks = [r for r in results if r.ok]
-    assert len(oks) == 2                
+    assert len(oks) == 2
     assert len(results) == 3
+
 
 def test_schema_rejects_bad_row():
     try:
-        DatasetSchema(source="bad.csv", row_count=-1,
-                      required_columns=["a"],
-                      present_columns=["a"])
+        DatasetSchema(
+            source="bad.csv",
+            row_count=-1,
+            required_columns=["a"],
+            present_columns=["a"],
+        )
         assert False, "should have raised"
     except Exception as e:
-        assert "bad.csv" in str(e)         
+        assert "bad.csv" in str(e)
+
+
 def test_no_print_in_src():
     pattern = re.compile(r"(?<![a-zA-Z_])print\(")
     for py_file in Path("src").glob("*.py"):
         text = py_file.read_text(encoding="utf-8")
-        assert not pattern.search(text), (
-            f"print() found in {py_file}")
+        assert not pattern.search(text), f"print() found in {py_file}"
+
 
 def test_log_line_is_valid_json(capsys):
     from src.pipeline import pipeline
@@ -50,21 +60,29 @@ def test_log_line_is_valid_json(capsys):
     captured = capsys.readouterr()
     lines = [ln for ln in captured.out.strip().split("\n") if ln]
     for line in lines:
-        parsed = json.loads(line)   
+        parsed = json.loads(line)
         assert "run_id" in parsed
-        assert "ts" in parsed            
+        assert "ts" in parsed
+
 
 def test_date_column_detected():
     from src.cleaning import detect_date_columns
 
-    df = pd.DataFrame({
-        "signup_date": ["2024-01-15", "2024-02-03",
-                         "2024-03-10", "2024-04-22"],
-        "order_id": ["1001", "1002", "1003", "1004"],
-    })
+    df = pd.DataFrame(
+        {
+            "signup_date": [
+                "2024-01-15",
+                "2024-02-03",
+                "2024-03-10",
+                "2024-04-22",
+            ],
+            "order_id": ["1001", "1002", "1003", "1004"],
+        }
+    )
     detected = detect_date_columns(df)
-    assert "signup_date" in detected  
-    assert "order_id" not in detected            
+    assert "signup_date" in detected
+    assert "order_id" not in detected
+
 
 def test_foreign_key_enforced():
     init_db()
@@ -74,21 +92,26 @@ def test_foreign_key_enforced():
                 "INSERT INTO datasets "
                 "(run_id, name, rows, cols) "
                 "VALUES (?, ?, ?, ?)",
-                (999999, "ghost.csv", 1, 1))
+                (999999, "ghost.csv", 1, 1),
+            )
             assert False, "should have raised"
         except sqlite3.IntegrityError:
-            pass                          
+            pass
+
 
 def test_history_survives_reconnect():
     init_db()
-    save_profile(run_id="hist1", source="persist.csv",
-                 rows=5, cols=1,
-                 column_stats=[{"name": "x", "dtype": "int64",
-                                "missing": 0}])
+    save_profile(
+        run_id="hist1",
+        source="persist.csv",
+        rows=5,
+        cols=1,
+        column_stats=[{"name": "x", "dtype": "int64", "missing": 0}],
+    )
     with db() as conn:
         row = conn.execute(
-            "SELECT name FROM datasets "
-            "WHERE name = 'persist.csv'").fetchone()
+            "SELECT name FROM datasets " "WHERE name = 'persist.csv'"
+        ).fetchone()
     assert row is not None
     assert row[0] == "persist.csv"
 
@@ -97,11 +120,11 @@ def test_index_is_used():
     init_db()
     with db() as conn:
         plan = conn.execute(
-            "EXPLAIN QUERY PLAN "
-            "SELECT * FROM column_stats WHERE name = 'x'"
+            "EXPLAIN QUERY PLAN " "SELECT * FROM column_stats WHERE name = 'x'"
         ).fetchall()
     plan_text = str(plan)
-    assert "USING INDEX" in plan_text        
+    assert "USING INDEX" in plan_text
+
 
 def test_mutable_default_not_shared():
     def collect(item, bucket=None):
@@ -113,9 +136,10 @@ def test_mutable_default_not_shared():
     r1 = collect("a")
     r2 = collect("b")
     r3 = collect("c")
-    assert r1 == ["a"]          
+    assert r1 == ["a"]
     assert r2 == ["b"]
-    assert r3 == ["c"]        
+    assert r3 == ["c"]
+
 
 def test_source_rejects_wrong_suffix():
     try:
@@ -133,18 +157,19 @@ def test_factory_dispatches_all_formats():
         source_for("data/x.parquet")
         assert False, "should have raised"
     except ValueError as e:
-        assert "Unsupported format" in str(e)    
+        assert "Unsupported format" in str(e)
+
 
 def test_rollback_leaves_nothing():
     from src.store import db, init_db
+
     init_db()
     try:
         with db() as conn:
             conn.execute(
-                "INSERT INTO runs "
-                "(run_id, started_at, source) "
-                "VALUES (?, ?, ?)",
-                ("rollback_test", "2026-01-01", "x.csv"))
+                "INSERT INTO runs " "(run_id, started_at, source) " "VALUES (?, ?, ?)",
+                ("rollback_test", "2026-01-01", "x.csv"),
+            )
             raise ValueError("simulated failure")
     except ValueError:
         pass
@@ -153,21 +178,21 @@ def test_rollback_leaves_nothing():
         row = conn.execute(
             "SELECT * FROM runs WHERE run_id = 'rollback_test'"
         ).fetchone()
-    assert row is None        
+    assert row is None
+
 
 def test_streaming_matches_full_read():
     from src.streaming import profile_streaming
     import pandas as pd
 
     df = pd.read_csv("data/sample_orders.csv")
-    streamed = profile_streaming(
-        "data/sample_orders.csv", chunk_size=1)
+    streamed = profile_streaming("data/sample_orders.csv", chunk_size=1)
 
     assert streamed["rows"] == df.shape[0]
-    assert streamed["missing"]["amount"] == int(
-        df["amount"].isna().sum())
+    assert streamed["missing"]["amount"] == int(df["amount"].isna().sum())
     expected_mean = float(df["amount"].mean())
-    assert abs(streamed["means"]["amount"] - expected_mean) < 0.01    
+    assert abs(streamed["means"]["amount"] - expected_mean) < 0.01
+
 
 def test_concurrent_beats_serial():
     import time
@@ -184,10 +209,12 @@ def test_concurrent_beats_serial():
     asyncio.run(ingest_all_threads(paths))
     threads_time = time.perf_counter() - t0
 
-    assert threads_time < shipped_time    
+    assert threads_time < shipped_time
+
 
 def test_vectorised_matches_loop():
     import numpy as np
+
     values = np.random.uniform(0, 1000, 10_000)
 
     total = 0.0
@@ -206,28 +233,30 @@ def test_nan_policy_is_explicit():
     data = np.array([1.0, 2.0, np.nan, 4.0])
     result = column_stats(data)
     assert result["n"] == 3
-    assert not (result["mean"] != result["mean"])    
+    assert not (result["mean"] != result["mean"])
+
 
 def test_outer_join_keeps_new_column():
     import pandas as pd
     from src.analysis import compare_runs
 
-    current = pd.DataFrame({
-        "name": ["a", "b"], "missing_now": [1, 2]})
-    previous = pd.DataFrame({
-        "name": ["a"], "missing_before": [1]})
+    current = pd.DataFrame({"name": ["a", "b"], "missing_now": [1, 2]})
+    previous = pd.DataFrame({"name": ["a"], "missing_before": [1]})
 
     result = compare_runs(current, previous)
     new_row = result[result["name"] == "b"]
     assert len(new_row) == 1
-    assert new_row["status"].iloc[0] == "NEW COLUMN"    
+    assert new_row["status"].iloc[0] == "NEW COLUMN"
+
 
 def test_dashboard_charts_run_without_error():
     import pandas as pd
-    from src.dashboard import (missing_values_chart,
-                                column_detail_grid,
-                                correlation_heatmap,
-                                outlier_boxplot)
+    from src.dashboard import (
+        missing_values_chart,
+        column_detail_grid,
+        correlation_heatmap,
+        outlier_boxplot,
+    )
 
     df = pd.read_csv("data/sample_orders.csv")
 
@@ -241,10 +270,12 @@ def test_dashboard_charts_run_without_error():
     assert fig3 is not None
 
     fig4 = outlier_boxplot(df, "amount")
-    assert fig4 is not None    
+    assert fig4 is not None
+
 
 def test_fingerprint_is_deterministic():
     from src.security import fingerprint
+
     h1 = fingerprint("data/sample_orders.csv")
     h2 = fingerprint("data/sample_orders.csv")
     assert h1 == h2
@@ -253,8 +284,10 @@ def test_fingerprint_is_deterministic():
 
 def test_enrichment_degrades_gracefully():
     from src.enrichment import fetch_with_retry
+
     result = fetch_with_retry(
         "https://this-domain-does-not-exist-12345.com/api",
-        max_attempts=2)
+        max_attempts=2,
+    )
     assert result["status"] == "UNAVAILABLE"
-    assert "error" in result    
+    assert "error" in result

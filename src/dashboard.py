@@ -2,9 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 import numpy as np
-import plotly.express as px
-
-
+import plotly.express as px  # type: ignore[import-untyped]
 
 
 def apply_theme(fig, ax):
@@ -18,14 +16,20 @@ def apply_theme(fig, ax):
         spine.set_edgecolor(grey)
     return fig, ax
 
+
 def missing_values_chart(df: pd.DataFrame):
     missing = df.isnull().sum().sort_values(ascending=False)
     fig, ax = plt.subplots(figsize=(8, 4))
-    ax.bar(missing.index, missing.values, color="#a855f7")
+    ax.bar(
+        missing.index.astype(str),
+        missing.values,  # type: ignore[arg-type]
+        color="#a855f7",
+    )  # type: ignore[arg-type]
     ax.set_title("Missing Values per Column")
     ax.set_ylabel("Missing Count")
     apply_theme(fig, ax)
     return fig
+
 
 def column_detail_grid(df: pd.DataFrame, col: str):
     fig, axes = plt.subplots(2, 2, figsize=(10, 8))
@@ -43,19 +47,23 @@ def column_detail_grid(df: pd.DataFrame, col: str):
         axes[0, 1].text(0.1, 0.5, "Box Plot: numeric columns only")
 
     top10 = df[col].value_counts().head(10)
-    axes[1, 0].barh(top10.index.astype(str), top10.values,
-                     color="#a855f7")
+    axes[1, 0].barh(top10.index.astype(str), top10.values, color="#a855f7")
     axes[1, 0].set_title("Top 10 Values")
 
     axes[1, 1].axis("off")
-    axes[1, 1].text(0.1, 0.5, "Missing-over-time\n(needs run history)",
-                     fontsize=10)
+    axes[1, 1].text(
+        0.1,
+        0.5,
+        "Missing-over-time\n(needs run history)",
+        fontsize=10,
+    )
 
     for ax in axes.flat:
         apply_theme(fig, ax)
 
     fig.tight_layout()
     return fig
+
 
 def correlation_heatmap(df: pd.DataFrame):
     numeric_df = df.select_dtypes(include=[np.number])
@@ -71,13 +79,22 @@ def correlation_heatmap(df: pd.DataFrame):
     corr = numeric_df[top_cols].corr()
 
     fig, ax = plt.subplots(figsize=(8, 6))
-    sns.heatmap(corr, cmap="coolwarm", center=0,
-                annot=True, fmt=".2f", ax=ax,
-                cbar_kws={"label": "correlation"})
-    ax.set_title(f"Correlation Heatmap (top {len(top_cols)} "
-                 f"of {numeric_df.shape[1]} by variance)")
+    sns.heatmap(
+        corr,
+        cmap="coolwarm",
+        center=0,
+        annot=True,
+        fmt=".2f",
+        ax=ax,
+        cbar_kws={"label": "correlation"},
+    )
+    ax.set_title(
+        f"Correlation Heatmap (top {len(top_cols)} "
+        f"of {numeric_df.shape[1]} by variance)"
+    )
     apply_theme(fig, ax)
     return fig
+
 
 def outlier_boxplot(df: pd.DataFrame, col: str):
     fig, ax = plt.subplots(figsize=(8, 4))
@@ -86,13 +103,19 @@ def outlier_boxplot(df: pd.DataFrame, col: str):
     apply_theme(fig, ax)
     return fig
 
+
 def interactive_scatter(df: pd.DataFrame, x_col: str, y_col: str):
     fig = px.scatter(
-        df, x=x_col, y=y_col, color=y_col,
+        df,
+        x=x_col,
+        y=y_col,
+        color=y_col,
         color_continuous_scale="Viridis",
-        title=f"{x_col} vs {y_col}")
+        title=f"{x_col} vs {y_col}",
+    )
     fig.update_layout(
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        font_color="#888888")
+        font_color="#888888",
+    )
     return fig

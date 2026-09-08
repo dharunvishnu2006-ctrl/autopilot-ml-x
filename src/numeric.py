@@ -13,6 +13,7 @@ def compare_mean_speed(n: int = 1_000_000):
 
     return loop_mean, vectorized_mean
 
+
 def column_stats(values: np.ndarray) -> dict:
     clean = values[~np.isnan(values)]
     if clean.size == 0:
@@ -32,6 +33,7 @@ def column_stats(values: np.ndarray) -> dict:
         "p95": float(np.percentile(clean, 95)),
         "outliers": int(outlier_mask.sum()),
     }
+
 
 def column_memory(values: np.ndarray) -> dict:
     original_mb = values.nbytes / 1_000_000

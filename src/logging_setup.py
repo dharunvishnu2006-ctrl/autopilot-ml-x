@@ -9,6 +9,7 @@ from pathlib import Path
 def generate_run_id() -> str:
     return uuid.uuid4().hex[:8]
 
+
 class JsonFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         payload = {
@@ -18,7 +19,8 @@ class JsonFormatter(logging.Formatter):
             "run_id": getattr(record, "run_id", ""),
             "message": record.getMessage(),
         }
-        return json.dumps(payload)    
+        return json.dumps(payload)
+
 
 def get_logger(name: str, run_id: str = "") -> logging.LoggerAdapter:
     logger = logging.getLogger(name)
@@ -31,4 +33,4 @@ def get_logger(name: str, run_id: str = "") -> logging.LoggerAdapter:
         logger.addHandler(handler)
         logger.addHandler(file_handler)
         logger.setLevel(logging.INFO)
-    return logging.LoggerAdapter(logger, {"run_id": run_id})        
+    return logging.LoggerAdapter(logger, {"run_id": run_id})
