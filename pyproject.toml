@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autopilot-ml-x"
+version = "1.1.0"
+description = "AutoPilot ML X - data profiling engine"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas",
+    "streamlit",
+    "flask",
+    "altair",
+    "aiofiles",
+    "pydantic",
+]
+
+[tool.setuptools.packages.find]
+include = ["src*"]
