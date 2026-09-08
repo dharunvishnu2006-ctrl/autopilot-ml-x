@@ -85,3 +85,23 @@ To catch security, typing, formatting, and code-quality problems automatically b
 Where
 The checks run across the project through pre-commit and `scripts/check.sh`. The fixes covered `api.py`, configuration, tests, and other source files. The workflow is now enforced through the Git/PR process.
 Result: 25 tests passing; flake8 21 → 0, mypy 7 → 0, bandit 62 findings → 0.
+
+
+## E14 — LLM Summary Verification
+
+### How
+
+* Built `build_prompt()` with explicit grounding instructions.
+* Built `verify()` to check every number against the source context.
+* Built `summarize()` with fallback to the raw report on hallucination or API failure.
+* Added a mocked LLM client so tests never touch the network.
+* Added 7 verification/failure test cases.
+* Documented the current limitation: column names are not verified.
+
+### Why
+
+To prevent an LLM-generated summary from introducing numbers that aren't actually in the dataset report. The verification step lets us reject hallucinated values and safely fall back to the original report.
+
+### Where
+
+The summarization and verification logic is used in the reporting/LLM layer. The LLM client is mocked in tests; this feature is currently proven without making real network calls.
