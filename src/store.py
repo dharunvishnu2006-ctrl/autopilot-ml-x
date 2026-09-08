@@ -39,6 +39,7 @@ CREATE INDEX IF NOT EXISTS idx_column_stats_name
     ON column_stats(name);
 """
 
+
 @contextmanager
 def db():
     conn = sqlite3.connect(DB_PATH)
@@ -57,29 +58,30 @@ def init_db():
     with db() as conn:
         conn.executescript(SCHEMA)
 
+
 def discover_files(data_dir: str = "data") -> list[Path]:
     root = Path(data_dir)
     patterns = ["*.csv", "*.json", "*.xlsx"]
-    found = []
+    found: list[Path] = []
     for pattern in patterns:
         found.extend(root.glob(pattern))
-    return found        
+    return found
 
-def save_profile(run_id: str, source: str,
-                  rows: int, cols: int,
-                  column_stats: list[dict]) -> int:
+
+def save_profile(
+    run_id: str, source: str, rows: int, cols: int, column_stats: list[dict]
+) -> int:
     with db() as conn:
         cur = conn.execute(
-            "INSERT INTO runs (run_id, started_at, source) "
-            "VALUES (?, ?, ?)",
-            (run_id, datetime.now(timezone.utc).isoformat(),
-             source))
+            "INSERT INTO runs (run_id, started_at, source) " "VALUES (?, ?, ?)",
+            (run_id, datetime.now(timezone.utc).isoformat(), source),
+        )
         run_pk = cur.lastrowid
 
         cur = conn.execute(
-            "INSERT INTO datasets (run_id, name, rows, cols) "
-            "VALUES (?, ?, ?, ?)",
-            (run_pk, source, rows, cols))
+            "INSERT INTO datasets (run_id, name, rows, cols) " "VALUES (?, ?, ?, ?)",
+            (run_pk, source, rows, cols),
+        )
         dataset_pk = cur.lastrowid
 
         for col in column_stats:
@@ -88,16 +90,23 @@ def save_profile(run_id: str, source: str,
                 "(dataset_id, name, dtype, missing, "
                 " unique_ct, mean, p50, p95) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                (dataset_pk, col["name"], col["dtype"],
-                 col["missing"], col.get("unique"),
-                 col.get("mean"), col.get("p50"),
-                 col.get("p95")))
+                (
+                    dataset_pk,
+                    col["name"],
+                    col["dtype"],
+                    col["missing"],
+                    col.get("unique"),
+                    col.get("mean"),
+                    col.get("p50"),
+                    col.get("p95"),
+                ),
+            )
 
-        return dataset_pk    
+        return dataset_pk
+
 
 def write_report(run_id: str, report: dict) -> Path:
     Path("reports").mkdir(exist_ok=True)
     path = Path("reports") / f"{run_id}.json"
-    path.write_text(json.dumps(report, indent=2,
-                                default=str))
+    path.write_text(json.dumps(report, indent=2, default=str))
     return path
