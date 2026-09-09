@@ -24,7 +24,7 @@
       "colour": "#a855f7",
       "steps": "1-80",
       "completion": 13,
-      "tests": 28,
+      "tests": 32,
       "steps_covered": 80,
       "description": "Completion - all 80 steps built",
       "features": [
