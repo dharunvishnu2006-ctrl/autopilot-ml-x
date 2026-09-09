@@ -8,6 +8,25 @@ from src.dashboard import (
     outlier_boxplot,
     interactive_scatter,
 )
+from src.versions import (
+    load_versions,
+    feature_lines,
+    bug_lines,
+    total_roadmap_steps,
+)
+
+KNOWN_LIMITS = """
+- Exact percentiles need the whole column; streaming gives
+  count, sum, mean, min, max only
+- The correlation heatmap caps at 15 columns and is untested
+  at larger scale (current data has only 2 numeric columns)
+- The LLM summary verifier checks numbers, not column names —
+  a fabricated column name could pass verification
+- SQLite is single-writer; fine for one profiler instance
+- Date detection is heuristic and will miss unusual formats
+- The concurrency test depends on generated benchmark files
+  that must be created locally first
+"""
 
 st.set_page_config(page_title="AutoPilot ML X", page_icon="🤖", layout="wide")
 st.markdown(
@@ -32,7 +51,69 @@ st.markdown(
 )
 st.markdown("v1 of 6 · Self-Healing MLOps Platform")
 
-page = st.sidebar.radio("Navigate", ["Dashboard", "Profiler", "About"])
+
+def render_evolution():
+    st.title("📈 How AutoPilot ML X Grew")
+    st.caption("Every number on this page comes from versions.json")
+
+    try:
+        versions = load_versions()
+    except FileNotFoundError as e:
+        st.error(f"versions.json missing: {e}")
+        return
+
+    grand_total = total_roadmap_steps(versions)
+    st.caption(f"Total roadmap: {grand_total} steps, {len(versions)} versions")
+    cols = st.columns(len(versions))
+    for i, v in enumerate(versions):
+        with cols[i]:
+            if v["status"] == "shipped":
+                st.markdown(
+                    f"<div style='background-color:{v['colour']};padding:8px;"
+                    f"border-radius:6px;text-align:center;color:white;'>"
+                    f"<b>{v['version']}</b><br/>{v['completion']}%<br/>"
+                    f"<span style='font-size:0.75em'>"
+                    f"{v['steps_covered']}/{grand_total} steps</span></div>",
+                    unsafe_allow_html=True,
+                )
+            else:
+                st.markdown(
+                    f"<div style='border:3px dashed {v['colour']};padding:8px;"
+                    f"border-radius:6px;text-align:center;color:{v['colour']};'>"
+                    f"<b>{v['version']}</b><br/>{v['steps']}</div>",
+                    unsafe_allow_html=True,
+                )
+
+    st.subheader("📋 Version Detail")
+    for v in [x for x in versions if x["status"] == "shipped"]:
+        header = (
+            f"{v['version']} — {v['steps_covered']} steps, "
+            f"{len(v['features'])} features, {v['tests']} tests, "
+            f"{len(v['bugs_fixed'])} bugs fixed"
+        )
+        with st.expander(header):
+            st.markdown("**Features:**")
+            st.markdown("\n".join(feature_lines(v)))
+            if v["bugs_fixed"]:
+                st.markdown("**Bugs Fixed:**")
+                st.markdown("\n".join(bug_lines(v)))
+
+    repo = "https://github.com/dharunvishnu2006-ctrl/autopilot-ml-x/blob/main"
+    st.subheader("📜 Decisions (ADRs)")
+    st.markdown(
+        f"- [ADR 001 — DataSource hierarchy over copied if-elif]"
+        f"({repo}/docs/adr/001-datasource-hierarchy.md)\n"
+        f"- [ADR 002 — SQLite over memory-only profiling]"
+        f"({repo}/docs/adr/002-sqlite-over-memory.md)\n"
+        f"- [ADR 003 — Threads for ingestion, chosen by measurement]"
+        f"({repo}/docs/adr/003-threads-over-asyncio.md)\n"
+    )
+
+    st.subheader("⚠️ Known Limits")
+    st.markdown(KNOWN_LIMITS)
+
+
+page = st.sidebar.radio("Navigate", ["Dashboard", "Profiler", "Evolution", "About"])
 
 if page == "Dashboard":
     st.write(
@@ -96,6 +177,9 @@ elif page == "Profiler":
 
         st.subheader("Raw Report")
         st.json(report)
+
+elif page == "Evolution":
+    render_evolution()
 
 elif page == "About":
     st.markdown(

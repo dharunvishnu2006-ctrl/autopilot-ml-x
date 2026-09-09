@@ -24,7 +24,7 @@
       "colour": "#a855f7",
       "steps": "1-80",
       "completion": 13,
-      "tests": 32,
+      "tests": 44,
       "steps_covered": 80,
       "description": "Completion - all 80 steps built",
       "features": [
@@ -42,8 +42,10 @@
         "E12: External Data Enrichment",
         "E13: Engineering Discipline",
         "E14: LLM-Assisted Profile Summaries",
-        "E15: Consolidation"
-      ],
+        "E15: Consolidation",
+        "E16: versions.json single source of truth",
+        "E17: Evolution Page"
+    ],
       "bugs_fixed": [
         "async ingestion awaited nothing - gather ran serially (ADR 003)",
         "load_one() returned None, crashing profile() - IngestResult added",
