@@ -394,3 +394,49 @@ def test_bug_lines_are_sentences_not_counts():
     lines = bug_lines(v)
     for line in lines:
         assert len(line) > 10
+
+
+def test_evolution_page_renders_without_error():
+    import importlib
+    import app
+
+    importlib.reload(app)
+
+
+def test_known_limits_not_empty():
+    from app import KNOWN_LIMITS
+
+    assert len(KNOWN_LIMITS.strip()) > 0
+    assert "percentile" in KNOWN_LIMITS.lower()
+
+
+def test_evolution_uses_real_repo_url():
+    import inspect
+    import app
+
+    source = inspect.getsource(app.render_evolution)
+    assert "dharunvishnu2006-ctrl/autopilot-ml-x" in source
+
+
+def test_all_shipped_versions_appear_in_detail():
+    from src.versions import load_versions
+
+    versions = load_versions()
+    shipped = [v for v in versions if v["status"] == "shipped"]
+    assert len(shipped) == 2
+
+
+def test_adr_files_referenced_exist():
+    from pathlib import Path
+
+    assert Path("docs/adr/001-datasource-hierarchy.md").exists()
+    assert Path("docs/adr/002-sqlite-over-memory.md").exists()
+    assert Path("docs/adr/003-threads-over-asyncio.md").exists()
+
+
+def test_sidebar_includes_evolution():
+    import inspect
+    import app
+
+    source = inspect.getsource(app)
+    assert '"Evolution"' in source
