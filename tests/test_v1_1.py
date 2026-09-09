@@ -10,6 +10,12 @@ from src.sources import source_for, CSVSource, JSONSource, ExcelSource
 import re
 import pytest
 from src.summarizer import verify, summarize
+from src.versions import (
+    load_versions,
+    current_version,
+    feature_lines,
+    bug_lines,
+)
 
 
 def test_bad_file_returns_typed_failure():
@@ -342,3 +348,49 @@ def test_summary_survives_api_failure():
     client = BrokenLLMClient()
     result = summarize(_CTX, client)
     assert result == str(_CTX)
+
+
+def test_versions_json_parses():
+    versions = load_versions()
+    for v in versions:
+        assert "version" in v
+        assert "status" in v
+        assert "colour" in v
+        assert "completion" in v
+
+
+def test_every_shipped_version_has_numbers():
+    versions = load_versions()
+    for v in versions:
+        if v["status"] == "shipped":
+            assert v["tests"] > 0
+            assert v["steps_covered"] > 0
+
+
+def test_planned_versions_exist():
+    versions = load_versions()
+    planned = [v for v in versions if v["status"] == "planned"]
+    assert len(planned) >= 4
+
+
+def test_missing_file_raises_error():
+    from pathlib import Path
+
+    try:
+        load_versions(Path("does_not_exist.json"))
+        assert False, "should have raised"
+    except FileNotFoundError:
+        pass
+
+
+def test_feature_lines_include_all_features():
+    v = current_version()
+    lines = feature_lines(v)
+    assert len(lines) == len(v["features"])
+
+
+def test_bug_lines_are_sentences_not_counts():
+    v = current_version()
+    lines = bug_lines(v)
+    for line in lines:
+        assert len(line) > 10
