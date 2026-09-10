@@ -105,3 +105,15 @@ To prevent an LLM-generated summary from introducing numbers that aren't actuall
 ### Where
 
 The summarization and verification logic is used in the reporting/LLM layer. The LLM client is mocked in tests; this feature is currently proven without making real network calls.
+
+
+## F1 — The Run Index
+
+### How I built it
+I first loaded the run data and built a linear search, then sorted the data and added binary search. After that I timed both approaches, built search-on-answer using `count_at_least()`, and tested all three approaches with pytest.
+
+### Why it was needed
+As run data grows to 100,000+ rows, scanning every row becomes slower. I measured both to confirm the real speed difference instead of assuming binary search would always be better.
+
+### Where it's used in this project
+In the dashboard, a user could search for a specific `run_id`, and the Run Index could use `binary_search` to find that run quickly. The Leaderboard could also use `search_on_answer` to find how many runs are above a certain accuracy.
