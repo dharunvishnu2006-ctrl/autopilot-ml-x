@@ -117,3 +117,15 @@ As run data grows to 100,000+ rows, scanning every row becomes slower. I measure
 
 ### Where it's used in this project
 In the dashboard, a user could search for a specific `run_id`, and the Run Index could use `binary_search` to find that run quickly. The Leaderboard could also use `search_on_answer` to find how many runs are above a certain accuracy.
+
+
+## F2 — The Leaderboard
+
+### How I built it
+I built bubble, insertion, merge, and quicksort from scratch and tested them. I then compared them with Python `sorted()`, using 300 items for bubble/insertion and 10,000 items for merge/quicksort/`sorted()`.
+
+### Why it was needed
+Without sorting, the Leaderboard can't efficiently arrange runs by accuracy. I built four algorithms to understand their differences instead of blindly using `sorted()`. Measuring them showed that Python's built-in `sorted()` was much faster than the hand built sorts. So in the real project I would use Python `sorted()` for the leaderboard and keep the four hand built sorts for learning and comparison.
+
+### Where it's used in this project
+The Leaderboard screen would use `sorted()` to arrange runs by accuracy and show the top 10. The four hand built sorts stay in the F2 learning/comparison code, not production.
