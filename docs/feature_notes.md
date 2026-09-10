@@ -129,3 +129,14 @@ Without sorting, the Leaderboard can't efficiently arrange runs by accuracy. I b
 
 ### Where it's used in this project
 The Leaderboard screen would use `sorted()` to arrange runs by accuracy and show the top 10. The four hand built sorts stay in the F2 learning/comparison code, not production.
+
+## F3 — Top-K and the Job Queue
+
+### How I built it
+Built `top_k` with a heap, then `run_job_queue` with a priority queue and finally `counting_sort` for small range integers.
+
+### Why it was needed
+`top_k` avoids sorting the entire dataset just to find the best 10 runs, which matters as the data grows to millions of runs. `run_job_queue` exists because a critical model training job with a deadline should jump ahead of less urgent jobs that arrived earlier. `counting_sort` fits small range integer data such as epoch numbers or rank values, where the range is limited and known.
+
+### Where it's used in this project
+`top_k` would be used in the Leaderboard when only the top 10 runs are needed, instead of sorting all runs. `run_job_queue` sits in the background training process, letting urgent/critical training jobs run before normal jobs. `counting_sort` could be used for small-range integer data such as rank or epoch numbers when those values need to be sorted.
