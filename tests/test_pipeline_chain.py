@@ -2,6 +2,7 @@ import sys
 
 sys.path.insert(0, "scripts")
 from pipeline_chain import LinkedList, UndoStack, Pipeline  # noqa: E402
+from pipeline_chain import Queue  # noqa: E402
 
 
 def test_linked_list_append_order():
@@ -27,3 +28,24 @@ def test_pipeline_chains_stages():
     pipe.add_stage("add_one", lambda x: x + 1)
     result = pipe.run(5)
     assert result == 11
+
+
+def test_queue_is_fifo():
+    runs = Queue()
+    runs.enqueue("a")
+    runs.enqueue("b")
+    runs.enqueue("c")
+    assert runs.dequeue() == "a"
+    assert runs.dequeue() == "b"
+    assert runs.dequeue() == "c"
+    assert runs.dequeue() is None
+
+
+def test_queue_survives_interleaved_ops():
+    runs = Queue()
+    runs.enqueue("x")
+    runs.dequeue()
+    runs.enqueue("y")
+    runs.enqueue("z")
+    assert runs.dequeue() == "y"
+    assert runs.dequeue() == "z"
