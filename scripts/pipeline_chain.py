@@ -116,3 +116,39 @@ pipe.add_stage("clean", clean)
 pipe.add_stage("train", train)
 result = pipe.run(None)
 print("final result:", result)
+
+
+class Queue:
+    def __init__(self):
+        self.head = None
+        self.tail = None
+
+    def enqueue(self, value):
+        new_node = Node(value)
+        if self.head is None:
+            self.head = new_node
+            self.tail = new_node
+            return
+        self.tail.next = new_node
+        self.tail = new_node
+
+    def dequeue(self):
+        if self.head is None:
+            return None
+        value = self.head.value
+        self.head = self.head.next
+        if self.head is None:
+            self.tail = None
+        return value
+
+
+runs = Queue()
+runs.enqueue("run_1")
+runs.enqueue("run_2")
+runs.enqueue("run_3")
+print(runs.dequeue())
+print(runs.dequeue())
+runs.enqueue("run_4")
+print(runs.dequeue())
+print(runs.dequeue())
+print(runs.dequeue())
