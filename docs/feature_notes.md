@@ -171,3 +171,14 @@ F1's binary search organizes data around ordering; a hash table organizes data a
 
 ### Where it's used in this project
 If someone runs xgb with max_depth=5, learning_rate=0.1 again, the HashTable cache would return the previously stored validation accuracy instead of retraining the model and recomputing that score. HashSet would be checked right before submitting a new training job to F3's job queue, to catch duplicates. The Trie powers the dashboard's model-search box, where a user types something like `xgb_` to quickly find all matching model names instead of scanning every one.
+
+## F6 — The Experiment Tree
+
+### How I built it
+Built BST, then AVL, then Segment Tree. Hit a `RecursionError` with 1000 sorted BST values, proving the skew problem. Also fixed two method placement/indentation mistakes. Added segment tree range query and point update.
+
+### Why it was needed
+The plain BST hit height 500 and crashed at 1000 sorted inserts. AVL stayed at height 11 even with 2000 sorted inserts. At 1 million runs, repeated `max()` scans the requested range every time a user refreshes or changes a filter, so the cost keeps adding up. The Segment Tree reduces each range query to O(log n), making frequent dashboard queries scalable as data grows.
+
+### Where it's used in this project
+The Leaderboard would use `AVL.in_order()` to give runs sorted by accuracy. The Leaderboard screen's run range filter/slider — when a user selects Run 400 to Run 700 — would trigger the Segment Tree's range query to get the best accuracy in that window.
