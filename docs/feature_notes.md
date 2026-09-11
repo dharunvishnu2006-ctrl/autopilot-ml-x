@@ -159,3 +159,15 @@ Currently these structures remain in the F4 learning implementation rather than 
 
 * **FIFO:** First item that enters is the first item that comes out.
 * **LIFO:** Last item that enters is the first item that comes out.
+
+
+## F5 — The Feature Cache
+
+### How I built it
+I built a HashTable with hashing, chaining, `put/get/delete`, then reused it for HashSet membership checks. Finally I built a Trie for character by character prefix searching. I also fixed a duplicate class bug that Python silently accepted but mypy caught.
+
+### Why it was needed
+F1's binary search organizes data around ordering; a hash table organizes data around identity. A feature cache cares about identity — "is this exact run configuration already here?" — so hashing is the more natural structure, giving average O(1) lookup instead of O(log n). HashSet wraps HashTable.put(key, True) so the code's intent is clear — `seen.add(key)` says "track membership" instead of exposing the raw implementation detail of a useless True value. A HashSet can only check one exact key in O(1); a pattern like `xgb_*` isn't a key, so answering it would mean scanning every key at O(n). A Trie stores shared prefixes, so it can jump straight to the `xgb_` branch and find all matches efficiently.
+
+### Where it's used in this project
+If someone runs xgb with max_depth=5, learning_rate=0.1 again, the HashTable cache would return the previously stored validation accuracy instead of retraining the model and recomputing that score. HashSet would be checked right before submitting a new training job to F3's job queue, to catch duplicates. The Trie powers the dashboard's model-search box, where a user types something like `xgb_` to quickly find all matching model names instead of scanning every one.
