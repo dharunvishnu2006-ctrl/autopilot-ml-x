@@ -140,3 +140,22 @@ Built `top_k` with a heap, then `run_job_queue` with a priority queue and finall
 
 ### Where it's used in this project
 `top_k` would be used in the Leaderboard when only the top 10 runs are needed, instead of sorting all runs. `run_job_queue` sits in the background training process, letting urgent/critical training jobs run before normal jobs. `counting_sort` could be used for small-range integer data such as rank or epoch numbers when those values need to be sorted.
+
+## F4 — The Pipeline Chain
+
+### How I built it
+
+I first built the LinkedList, then reused the node-chain idea for the UndoStack, Pipeline, and finally the FIFO Queue. While building the queue, I noticed LinkedList.append() had to walk from head to find the end every time, so I added a tail pointer to make new arrivals faster.
+
+### Why it was needed
+
+A linked list is not inherently better than a Python list for a simple fixed pipeline — a plain list of stage functions would work just as well; this was mainly practice building the chain structure. The UndoStack's `prev` pointer is also not strictly required — a Python list with `append()`/`pop()` handles undo perfectly well too. The Queue is different: FIFO order is a real requirement for processing runs in arrival order, though a plain Python list could also implement FIFO — the hand built linked list here is mainly an implementation/practice choice.
+
+### Where it's used in this project
+
+Currently these structures remain in the F4 learning implementation rather than having confirmed production call sites in AutoPilot ML X. The Queue models a real ingestion requirement (FIFO), but its hand built linked list implementation is not yet a required production component.
+
+### Glossary
+
+* **FIFO:** First item that enters is the first item that comes out.
+* **LIFO:** Last item that enters is the first item that comes out.
