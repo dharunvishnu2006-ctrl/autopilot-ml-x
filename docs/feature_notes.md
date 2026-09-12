@@ -193,3 +193,14 @@ A matrix stores every possible pair of stages (O(V²)), but a pipeline is sparse
 
 ### Where it's used in this project
 `bfs_reachable` runs when a stage changes, finding exactly which downstream stages must re-run. `has_cycle` runs when creating or updating a pipeline config, rejecting invalid cyclic pipelines before saving. `topological_order` runs when the pipeline actually executes, giving the executor the safe run order: load → clean → features → train.
+
+## F8 — Cheapest Compute Path
+
+### How I built it
+Built Dijkstra first. Created a negative edge trap where naive Dijkstra gave 2 instead of 0. Built Bellman-Ford and confirmed the correct 0. Built Floyd-Warshall for all-pairs shortest paths, learned why k must be outermost. Built Kruskal MST using a simplified DSU to avoid cycles.
+
+### Why it was needed
+Dijkstra can fail with negative edges: it locks in a node's cost as final the moment it's popped, so a later negative-edge correction never propagates downstream — giving 2 instead of the correct 0. Bellman-Ford needs V-1 rounds because a shortest simple path has at most V-1 edges. Floyd-Warshall needs k outermost so that by the time a waypoint k is tried, dist[i][k] and dist[k][j] are already fully refined from earlier waypoints, not stale. Kruskal is cheapest-first because each accepted edge is the cheapest way to connect two separate components — nothing cheaper can ever show up later to replace it.
+
+### Where it's used in this project
+Dijkstra runs when the system needs the cheapest execution route from one pipeline stage to another, based on costs like compute time or data transfer. Bellman-Ford handles cases with negative costs — for example, a cache/reuse stage that gives a cost credit (like -5) because it avoids an expensive computation later. Floyd-Warshall precomputes a full cheapest-route table so any two stages' cheapest connection is instantly available later, instead of running Dijkstra fresh every time. MST/DSU is used when AutoPilot needs to connect all participating compute nodes at the lowest total network/transfer cost, without redundant connections.
