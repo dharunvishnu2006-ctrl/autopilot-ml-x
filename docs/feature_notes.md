@@ -182,3 +182,14 @@ The plain BST hit height 500 and crashed at 1000 sorted inserts. AVL stayed at h
 
 ### Where it's used in this project
 The Leaderboard would use `AVL.in_order()` to give runs sorted by accuracy. The Leaderboard screen's run range filter/slider — when a user selects Run 400 to Run 700 — would trigger the Segment Tree's range query to get the best accuracy in that window.
+
+## F7 — The Pipeline DAG
+
+### How I built it
+I built `Graph` first, then `bfs_reachable`, `has_cycle`, and finally `topological_order`.
+
+### Why it was needed
+A matrix stores every possible pair of stages (O(V²)), but a pipeline is sparse, so an adjacency list only stores actual edges (O(V+E)). Without reachability, we might re-run everything unnecessarily or re-run nothing downstream — `bfs_reachable` identifies exactly what is affected when a stage changes. An undetected cycle can make the pipeline run forever or hit a recursion/iteration limit. The three-colour method catches this because a GREY node found again is still on the current DFS path (a real cycle), while a BLACK node found again was already visited and finished (not a cycle) — a simple visited/not-visited check can't tell these apart. Topological sort's guarantee is that every dependency appears before what depends on it. If all nodes get processed, it's a valid DAG; leftover nodes are stuck behind a cycle, which is how it detects cycles for free.
+
+### Where it's used in this project
+`bfs_reachable` runs when a stage changes, finding exactly which downstream stages must re-run. `has_cycle` runs when creating or updating a pipeline config, rejecting invalid cyclic pipelines before saving. `topological_order` runs when the pipeline actually executes, giving the executor the safe run order: load → clean → features → train.
