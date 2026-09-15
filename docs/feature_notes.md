@@ -204,3 +204,14 @@ Dijkstra can fail with negative edges: it locks in a node's cost as final the mo
 
 ### Where it's used in this project
 Dijkstra runs when the system needs the cheapest execution route from one pipeline stage to another, based on costs like compute time or data transfer. Bellman-Ford handles cases with negative costs — for example, a cache/reuse stage that gives a cost credit (like -5) because it avoids an expensive computation later. Floyd-Warshall precomputes a full cheapest-route table so any two stages' cheapest connection is instantly available later, instead of running Dijkstra fresh every time. MST/DSU is used when AutoPilot needs to connect all participating compute nodes at the lowest total network/transfer cost, without redundant connections.
+
+## F9 — Grouping and Streaming Metrics
+
+### How I built it
+Upgraded DSU with path compression + union by rank, then added monotonic stack, two pointers, and sliding window. Fixed two bugs: DSU not being edited in place, and a missing `deque` import.
+
+### Why it was needed
+Path compression makes nodes point directly to the root so long chains don't form again. For the monotonic stack, once a bigger value arrives, smaller values are useless for future max checks. For two pointers, with sorted lists, 2 < 4 means 2 can't match 4 or anything after it, so only that pointer needs to move. For the sliding window, resumming the whole window costs O(n) but updating a running sum costs O(1).
+
+### Where it's used in this project
+DSU is used by F8's existing MST computation, now faster. The monotonic stack, two pointers, and sliding window all currently live in internal run-processing/metrics logic — detecting new record runs, matching sorted successful/flagged run ID lists, and calculating rolling average accuracy — without a confirmed user-facing display yet.
