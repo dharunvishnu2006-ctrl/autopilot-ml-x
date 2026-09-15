@@ -226,3 +226,14 @@ Bitmask representation makes set operations fast with `|`, `&`, `^` instead of u
 
 ### Where it's used in this project
 Bitmask supports internal feature set/config operations. Memoization is mainly a learning/demo pattern here, not yet reused elsewhere. The 1D DP supports internal feature selection, with no confirmed dashboard trigger yet. Edit distance compares schema/column name changes between dataset versions. The scheduler chooses experiments within a GPU/time budget and returns the actual plan to run.
+
+## F11 — Greedy, Backtracking, Strings
+
+### How I built it
+Built the greedy scheduler and constructed a trap where it loses (13 vs 14). Built backtracking with pruning and measured node counts (8 vs 10). Built column rename matching using edit distance with a threshold.
+
+### Why it was needed
+The constructed trap proves greedy can lose despite always picking the best ratio — it optimizes each immediate choice, not what's left in the budget. Pruning reduces the work done (fewer nodes visited) without changing which configurations are valid. The threshold in column matching prevents false rename matches, since without it every old column would be forced to match something, even something unrelated.
+
+### Where it's used in this project
+Greedy vs DP supports scheduling comparison. Backtracking supports internal hyperparameter search. Column rename matching runs when a new dataset version is compared with the previous version, using edit distance to automatically identify likely renamed columns.
