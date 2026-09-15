@@ -215,3 +215,14 @@ Path compression makes nodes point directly to the root so long chains don't for
 
 ### Where it's used in this project
 DSU is used by F8's existing MST computation, now faster. The monotonic stack, two pointers, and sliding window all currently live in internal run-processing/metrics logic — detecting new record runs, matching sorted successful/flagged run ID lists, and calculating rolling average accuracy — without a confirmed user-facing display yet.
+
+## F10 — The Training Budget
+
+### How I built it
+Bitmask, then memoized Fibonacci with a call-count measurement, then 1D DP, then 2D edit distance, then the full knapsack scheduler with backtracking.
+
+### Why it was needed
+Bitmask representation makes set operations fast with `|`, `&`, `^` instead of using Python sets or lists. Memoization dropped Fibonacci from 21,891 calls to 39, avoiding exponential repeated work as n grows. In the 1D DP, checking both skip and include at every cell prevents a greedy choice from missing the best combination. In edit distance, a matching character needs 0 edits because it's already correct. The full scheduler returns the plan (A + B), not just 25, because the plan is what's actually actionable.
+
+### Where it's used in this project
+Bitmask supports internal feature set/config operations. Memoization is mainly a learning/demo pattern here, not yet reused elsewhere. The 1D DP supports internal feature selection, with no confirmed dashboard trigger yet. Edit distance compares schema/column name changes between dataset versions. The scheduler chooses experiments within a GPU/time budget and returns the actual plan to run.
