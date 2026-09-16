@@ -237,3 +237,14 @@ The constructed trap proves greedy can lose despite always picking the best rati
 
 ### Where it's used in this project
 Greedy vs DP supports scheduling comparison. Backtracking supports internal hyperparameter search. Column rename matching runs when a new dataset version is compared with the previous version, using edit distance to automatically identify likely renamed columns.
+
+## F12 — The LeetCode Discipline
+
+### How I built it
+Went through easy patterns, then linked lists, then medium patterns (graphs, greedy, intervals), then the final cross-project consolidation. I also caught a linked-list test bug where I reused a list that had already been mutated by an earlier test, so I rebuilt the test data to keep tests isolated.
+
+### Why it was needed
+F12 turned the DSA patterns from F5, F7, F9, F10, and others into fast problem-solving skills. Two Sum practices the same hash-lookup thinking used for fast data/IOC lookups (F5). Number of Islands reinforces BFS/graph traversal used for reachability problems (F7). Coin Change strengthens DP thinking similar to choosing solutions from smaller subproblems (F10).
+
+### Where it's used in this project
+F12 is interview practice, not production code. It prepares me to recognize common DSA patterns quickly, solve unfamiliar problems under time pressure, and explain the what, why, and how clearly during a technical interview.
