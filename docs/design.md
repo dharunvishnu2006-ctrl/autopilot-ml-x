@@ -133,3 +133,20 @@ code.
   same "drop vs. impute" decision at a larger scale; the drop-first
   policy here is the starting precedent, not necessarily the final
   answer.
+
+## §8 — Cross-Project Patterns
+
+**Hash Table / Hash Set** — key → fast lookup, same pattern across all three:
+- AutoPilot: run_config → feature cache. "Have I already computed this?"
+- CloudShield X: hash set of suspicious IPs/IOCs. "Is this IP known as malicious?"
+- Sentinel AI India: agent_name → agent. "Which agent should handle this task?"
+
+**Priority Queue / Heap** — priority → next item, same pattern across all three:
+- AutoPilot: training jobs by urgency. "Which job runs next?"
+- CloudShield X: threats by severity. "Which threat gets handled first?"
+- Sentinel AI India: agent tasks by urgency. "Which task executes first?"
+
+**BFS / Graph Traversal** — reachability, same pattern across all three:
+- AutoPilot: pipeline stages. "Which stages are reachable from this data source?"
+- CloudShield X: attack graph. "Which hosts are reachable from a compromised server?"
+- Sentinel AI India: agent graph. "What's the shortest route between agents?"  
