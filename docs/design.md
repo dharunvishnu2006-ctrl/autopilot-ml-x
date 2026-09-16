@@ -118,6 +118,11 @@ code.
    files** (`data/bench_*.csv`) that are gitignored — the test only
    passes on a machine where `make_benchmark_files.py` has already
    been run once.
+7. 7. **PostgreSQL setup is blocked on Windows.** The note records the unresolved port 5432 permission issue, Administrator attempt, Defender/AV checks, and that Steps 155–156 are deferred while SQLite continues for G1–G7
+   here, describing the port 5432 permission-denied error, that it
+   persists even running as Administrator, and that Windows
+   Defender/AV was checked and ruled out] Steps 155-156 remain
+   deferred; SQLite continues to serve G1 onward in the meantime.   
 
 ## §7 — What v3 Will Need
 
