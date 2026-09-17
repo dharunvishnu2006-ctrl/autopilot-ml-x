@@ -32,6 +32,7 @@ conn.execute(
     "INSERT INTO experiments VALUES "
     "(2,'unused_experiment',1,'2026-01-05','never run')"
 )
+conn.execute("INSERT INTO metrics VALUES (4,4,'accuracy',0.91)")
 
 conn.commit()
 print("seed data inserted")
