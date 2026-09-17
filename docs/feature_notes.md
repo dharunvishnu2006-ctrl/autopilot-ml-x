@@ -282,3 +282,14 @@ AVG skips NULLs, so 0.85 and 0.91 produce 0.88 from 2 values, not from all 4 run
 
 ### Where it's used in this project
 COUNT/AVG powers dashboard run counts and average accuracy, correctly ignoring missing metrics. GROUP BY/HAVING finds high-performing model families based on grouped results. CASE WHEN displays accuracy as an A-D letter grade on the leaderboard.
+
+## G4 — Joining the Story Together
+
+### How I built it
+Used INNER JOIN for matching records, LEFT JOIN + WHERE IS NULL to find unused experiments, and a self-join to compare runs sharing the same model type.
+
+### Why it was needed
+INNER JOIN returns a row only when both tables have a matching row, so experiment 2 with zero runs is hidden. In the self-join, a.id < b.id prevents a run from matching itself and avoids counting the same pair twice (1,3 and 3,1).
+
+### Where it's used in this project
+INNER JOIN shows each run with its experiment, model type, and metrics. The LEFT JOIN anti-join pattern powers a dashboard view of experiments that have never been run. The self-join compares two runs that use the same model type.
