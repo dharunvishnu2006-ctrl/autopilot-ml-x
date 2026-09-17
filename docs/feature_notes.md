@@ -259,3 +259,15 @@ I designed the five-table 3NF schema with proper primary/foreign keys and long-f
 
 ### Where it's used in this project
 `datasets` stores dataset-level information, `model_types` stores reusable model names/types, `experiments` stores experiment definitions/configurations, `runs` stores individual experiment executions, and `metrics` stores each run's values in long format. Together, `runs` and `metrics` answer a real query: "show me the runs in the leaderboard along with each run's metric values, so I can compare experiment performance." PostgreSQL setup remains blocked on this machine (see design.md §6); SQLite is the working path for G1 onward.
+
+
+## G2 — Reading Runs
+
+### How I built it
+Seeded three runs and practiced SELECT, WHERE, ORDER BY, and LIMIT. Caught a semicolon bug that split LIMIT off from ORDER BY into its own invalid statement, causing a "one statement at a time" error.
+
+### Why it was needed
+ORDER BY must happen before LIMIT so the database sorts all matching rows first, then takes the required number from that sorted result. Otherwise, LIMIT could select the wrong row before sorting.
+
+### Where it's used in this project
+WHERE powers a dashboard filter to show only completed ("done") runs. ORDER BY + LIMIT lets the Leaderboard/dashboard sort runs by score or start time and show the top N or the most recent run.
