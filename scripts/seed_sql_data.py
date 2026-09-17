@@ -28,6 +28,10 @@ conn.execute("INSERT INTO metrics VALUES (3,1,'duration',120.5)")
 conn.execute(
     "INSERT INTO runs VALUES " "(4,1,2,'done','trained','2026-01-04','2026-01-04','{}')"
 )
+conn.execute(
+    "INSERT INTO experiments VALUES "
+    "(2,'unused_experiment',1,'2026-01-05','never run')"
+)
 
 conn.commit()
 print("seed data inserted")
