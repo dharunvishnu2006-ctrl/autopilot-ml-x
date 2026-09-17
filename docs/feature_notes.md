@@ -271,3 +271,14 @@ ORDER BY must happen before LIMIT so the database sorts all matching rows first,
 
 ### Where it's used in this project
 WHERE powers a dashboard filter to show only completed ("done") runs. ORDER BY + LIMIT lets the Leaderboard/dashboard sort runs by score or start time and show the top N or the most recent run.
+
+## G3 — Leaderboard Statistics
+
+### How I built it
+Used SQL COUNT/AVG with NULL handling, GROUP BY/HAVING for grouped stats, and CASE WHEN to convert accuracy into A-D grades.
+
+### Why it was needed
+AVG skips NULLs, so 0.85 and 0.91 produce 0.88 from 2 values, not from all 4 runs. COUNT(*) in WHERE errors because grouping hasn't happened yet; putting status='done' in HAVING instead can silently give wrong aggregates, because the filter would apply after the calculation, not before it.
+
+### Where it's used in this project
+COUNT/AVG powers dashboard run counts and average accuracy, correctly ignoring missing metrics. GROUP BY/HAVING finds high-performing model families based on grouped results. CASE WHEN displays accuracy as an A-D letter grade on the leaderboard.
