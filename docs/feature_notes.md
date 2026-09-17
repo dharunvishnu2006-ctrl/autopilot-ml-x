@@ -248,3 +248,14 @@ F12 turned the DSA patterns from F5, F7, F9, F10, and others into fast problem-s
 
 ### Where it's used in this project
 F12 is interview practice, not production code. It prepares me to recognize common DSA patterns quickly, solve unfamiliar problems under time pressure, and explain the what, why, and how clearly during a technical interview.
+
+## G1 — The Schema
+
+### How I built it
+I designed the five-table 3NF schema with proper primary/foreign keys and long-format metrics. I ran `schema.sql` in SQLite and verified all five tables were created. Then I installed PostgreSQL 18 and debugged its startup failure on port 5432 by checking permissions, firewall, logs, Defender, and antivirus. The issue remained unresolved, so I documented it and continued G1 development with SQLite.
+
+### Why it was needed
+`model_types` avoids 230,000 wasted characters and reduces a rename from 10,000 updates to 1. Long-format `metrics` avoids an `ALTER TABLE` for every new metric — just one `INSERT` row instead.
+
+### Where it's used in this project
+`datasets` stores dataset-level information, `model_types` stores reusable model names/types, `experiments` stores experiment definitions/configurations, `runs` stores individual experiment executions, and `metrics` stores each run's values in long format. Together, `runs` and `metrics` answer a real query: "show me the runs in the leaderboard along with each run's metric values, so I can compare experiment performance." PostgreSQL setup remains blocked on this machine (see design.md §6); SQLite is the working path for G1 onward.
