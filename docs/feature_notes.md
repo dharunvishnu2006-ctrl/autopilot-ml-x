@@ -293,3 +293,14 @@ INNER JOIN returns a row only when both tables have a matching row, so experimen
 
 ### Where it's used in this project
 INNER JOIN shows each run with its experiment, model type, and metrics. The LEFT JOIN anti-join pattern powers a dashboard view of experiments that have never been run. The self-join compares two runs that use the same model type.
+
+## G5 — Subqueries and CTEs
+
+### How I built it
+Started with the naive GROUP BY + MAX approach, then used RANK() in a derived table, wrapped it in CTEs for readability, and added a recursive calendar CTE.
+
+### Why it was needed
+MAX() can pair with an arbitrary run_id, since it isn't itself aggregated and has no logical connection to which row produced the max value. RANK() identifies the actual best run by ranking rows within each group. The calendar CTE keeps zero-run days visible in charts, instead of days with no runs simply vanishing.
+
+### Where it's used in this project
+The RANK/CTE pattern powers the Leaderboard, finding the actual best run for each experiment. The calendar CTE powers a runs-over-time chart, keeping days with zero runs visible instead of dropping them.
