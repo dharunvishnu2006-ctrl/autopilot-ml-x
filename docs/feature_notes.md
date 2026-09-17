@@ -304,3 +304,15 @@ MAX() can pair with an arbitrary run_id, since it isn't itself aggregated and ha
 
 ### Where it's used in this project
 The RANK/CTE pattern powers the Leaderboard, finding the actual best run for each experiment. The calendar CTE powers a runs-over-time chart, keeping days with zero runs visible instead of dropping them.
+
+
+## G6 — Window Functions
+
+### How I built it
+Used RANK/DENSE_RANK with a real 0.91 tie, plus LAG/LEAD, FIRST_VALUE, and PERCENT_RANK. Re-ran queries to verify actual output instead of relying on predictions.
+
+### Why it was needed
+RANK skips after ties; DENSE_RANK doesn't. LAG is positional and doesn't skip NULLs. FIRST_VALUE gives every row the first value, providing a consistent baseline.
+
+### Where it's used in this project
+RANK/DENSE_RANK powers a fair model leaderboard where tied accuracies share a rank. LAG/LEAD compares a run with the one immediately before or after it. FIRST_VALUE shows each run's accuracy against the initial baseline. PERCENT_RANK displays a run's relative percentile standing.
