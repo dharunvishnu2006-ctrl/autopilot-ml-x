@@ -327,3 +327,14 @@ NULL safely stays NULL in arithmetic, but a bad timestamp creates a real negativ
 
 ### Where it's used in this project
 The moving average powers an accuracy trend chart. The CHECK constraint protects data when jobs or dashboard uploads insert run timestamps. COALESCE and SUBSTR keep dashboard experiment details clean and readable.
+
+## G8 — Python Meets the Database
+
+### How I built it
+Built SQLAlchemy Core with parameterized queries, then set up the ORM and fixed a ForeignKey bug where the relationship couldn't find a join condition. Reproduced and measured N+1 queries, then fixed it using selectinload.
+
+### Why it was needed
+Parameterized queries prevent SQL injection. N+1 caused 3 queries versus 2 in my small test; at 200 experiments that becomes 201 versus 2, making the performance gap much larger as data grows.
+
+### Where it's used in this project
+Core powers dashboard queries for specific metrics or reports. The ORM handles creating an experiment with its runs and metrics as Python objects.
