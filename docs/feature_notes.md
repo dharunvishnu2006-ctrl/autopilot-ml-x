@@ -338,3 +338,14 @@ Parameterized queries prevent SQL injection. N+1 caused 3 queries versus 2 in my
 
 ### Where it's used in this project
 Core powers dashboard queries for specific metrics or reports. The ORM handles creating an experiment with its runs and metrics as Python objects.
+
+## G9 — Migrations, Transactions, Injection
+
+### How I built it
+Proved the orphan-run transaction bug, tested an Alembic downgrade's data loss, exploited SQL injection then fixed it with parameters, and added a grep test for unsafe SQL.
+
+### Why it was needed
+Orphan runs can corrupt leaderboard AVG results. An untested downgrade can permanently lose data. SQL injection worked because user input was treated as SQL code, not data.
+
+### Where it's used in this project
+Transactions keep a run and its metrics consistent when saved together. Migrations and the ADR rules guide safe schema changes and downgrades. Parameterized queries protect dashboard filters from SQL injection.
