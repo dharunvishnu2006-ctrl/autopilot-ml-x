@@ -156,3 +156,11 @@ code.
 - AutoPilot: pipeline stages. "Which stages are reachable from this data source?"
 - CloudShield X: attack graph. "Which hosts are reachable from a compromised server?"
 - Sentinel AI India: agent graph. "What's the shortest route between agents?"  
+
+## §9 — Star Schema (G11)
+* **Fact table:** `runs` — the central record for each ML run.
+* **Dimension tables:** `model_types`, `experiments`, and `datasets` — they describe the runs.
+* **`metrics` doesn't fit cleanly as either** — it's long-format
+  measurement data *about* the fact table (multiple metric rows
+  per run), closer to a second, narrower fact table than a
+  dimension.
