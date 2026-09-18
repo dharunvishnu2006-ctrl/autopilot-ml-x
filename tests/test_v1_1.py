@@ -57,6 +57,13 @@ def test_no_print_in_src():
         assert not pattern.search(text), f"print() found in {py_file}"
 
 
+def test_no_fstring_sql_in_src():
+    pattern = re.compile(r'f["\'].*(SELECT|INSERT|UPDATE|DELETE).*\{', re.IGNORECASE)
+    for py_file in Path("src").glob("**/*.py"):
+        text = py_file.read_text(encoding="utf-8")
+        assert not pattern.search(text), f"f-string SQL found in {py_file}"
+
+
 def test_log_line_is_valid_json(capsys):
     from src.pipeline import pipeline
 
