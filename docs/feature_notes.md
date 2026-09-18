@@ -316,3 +316,14 @@ RANK skips after ties; DENSE_RANK doesn't. LAG is positional and doesn't skip NU
 
 ### Where it's used in this project
 RANK/DENSE_RANK powers a fair model leaderboard where tied accuracies share a rank. LAG/LEAD compares a run with the one immediately before or after it. FIRST_VALUE shows each run's accuracy against the initial baseline. PERCENT_RANK displays a run's relative percentile standing.
+
+## G7 — Time in SQL
+
+### How I built it
+Built SQL moving averages, duration/staleness checks, a CHECK constraint for valid timestamps, and string cleanup with SUBSTR and COALESCE. Fixed a SQLite locking issue by switching to pytest fixtures for connection cleanup.
+
+### Why it was needed
+NULL safely stays NULL in arithmetic, but a bad timestamp creates a real negative duration and wrong averages. The CHECK constraint blocks this invalid data, proven by the IntegrityError raised in the test.
+
+### Where it's used in this project
+The moving average powers an accuracy trend chart. The CHECK constraint protects data when jobs or dashboard uploads insert run timestamps. COALESCE and SUBSTR keep dashboard experiment details clean and readable.
