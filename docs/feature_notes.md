@@ -349,3 +349,14 @@ Orphan runs can corrupt leaderboard AVG results. An untested downgrade can perma
 
 ### Where it's used in this project
 Transactions keep a run and its metrics consistent when saved together. Migrations and the ADR rules guide safe schema changes and downgrades. Parameterized queries protect dashboard filters from SQL injection.
+
+## G10 — Indexes and EXPLAIN
+
+### How I built it
+I generated bulk run data, measured the query before and after adding the correct index, tested the wrong column order, and built a partial index for running rows. I also documented Step 169 as deferred because PostgreSQL partitioning is unavailable.
+
+### Why it was needed
+The index reduced query time from 0.0523s to 0.0029s, about 18x faster. It also removed the temporary sort step, because the index already provides the required order. A partial index saves space by storing only matching 'running' rows instead of every row.
+
+### Where it's used in this project
+This index supports the Leaderboard/dashboard query that filters runs by experiment_id and sorts them by latest started_at, keeping frequent dashboard lookups fast as run data grows.
