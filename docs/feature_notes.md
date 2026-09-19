@@ -360,3 +360,14 @@ The index reduced query time from 0.0523s to 0.0029s, about 18x faster. It also 
 
 ### Where it's used in this project
 This index supports the Leaderboard/dashboard query that filters runs by experiment_id and sorts them by latest started_at, keeping frequent dashboard lookups fast as run data grows.
+
+## G11 — The Experiment Warehouse
+
+### How I built it
+I built a ROLLUP equivalent with UNION ALL, confirmed the star schema using the existing tables, added a guarded accuracy trigger, and tested FTS5 and JSON extraction with SQLite.
+
+### Why it was needed
+The trigger's guard stops a worse accuracy (0.5) from replacing the best result. FTS5 and JSON functions provide real SQLite equivalents for search and JSON querying, standing in for PostgreSQL's tsvector and JSONB while that setup remains blocked.
+
+### Where it's used in this project
+The trigger keeps the dashboard's best result updated automatically. FTS5 powers experiment search. JSON extraction helps compare hyperparameters between runs.
