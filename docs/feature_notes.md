@@ -371,3 +371,14 @@ The trigger's guard stops a worse accuracy (0.5) from replacing the best result.
 
 ### Where it's used in this project
 The trigger keeps the dashboard's best result updated automatically. FTS5 powers experiment search. JSON extraction helps compare hyperparameters between runs.
+
+## G12 — Production Database
+
+### How I built it
+I measured connection pool exhaustion using SQLite, noting that it illustrates pooling rather than PostgreSQL performance. I built the funnel query, proved NULLIF with an empty table, and completed the Layer 3 consolidation checklist.
+
+### Why it was needed
+NULLIF prevents a division-by-zero crash when the funnel has no submitted runs; my empty-table test returned None instead. Pool exhaustion causes waiting because extra queries queue until a connection is released.
+
+### Where it's used in this project
+The funnel query supports an engineering-manager dashboard showing run progress. Connection pooling supports production workloads such as parallel training jobs sharing database connections.
