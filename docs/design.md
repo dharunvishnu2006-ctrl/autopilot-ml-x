@@ -164,3 +164,16 @@ code.
   measurement data *about* the fact table (multiple metric rows
   per run), closer to a second, narrower fact table than a
   dimension.
+
+## §10 — Layer 3 Consolidation (G12)  
+
+## §10 — Layer 3 Consolidation (G12)
+
+Custom implementations were tested against expected/standard behavior
+(e.g., MST verified against a known minimum cost). G9's grep test
+confirms no f-string SQL remains anywhere in the project. Migrations
+and destructive downgrades were tested with real data (ADR 006).
+Synthetic data is identified using F1's `source` column rule — never
+shown as real. PostgreSQL-specific replication (step 170) and the
+`pool_pre_ping` restart proof (step 171) remain deferred, alongside
+the existing blocker documented in §6.
