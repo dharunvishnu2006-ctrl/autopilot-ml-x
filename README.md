@@ -1,96 +1,45 @@
-# 🤖 AutoPilot ML X v1.1 — Async Data Ingestion & Profiling Engine
+# AutoPilot ML X
 
-**The data engine of a self-healing MLOps platform.** Ingests CSV/JSON/Excel concurrently, auto-profiles any dataset, and exposes a Flask API — all wrapped in a clean `@pipeline` decorator.
+![version](https://img.shields.io/badge/version-v2-blue)
+![tests](https://img.shields.io/badge/tests-159%20passing-brightgreen)
+![python](https://img.shields.io/badge/python-3.14-blue)
 
-![Python](https://img.shields.io/badge/Python-3.14-blue) ![asyncio](https://img.shields.io/badge/asyncio-concurrent-purple) ![Pandas](https://img.shields.io/badge/Pandas-data-orange) ![NumPy](https://img.shields.io/badge/NumPy-vectorised-blue) ![Flask](https://img.shields.io/badge/Flask-API-green) ![pytest](https://img.shields.io/badge/pytest-32%20passing-brightgreen) ![mypy](https://img.shields.io/badge/mypy-clean-blue) ![bandit](https://img.shields.io/badge/bandit-clean-yellow) ![Streamlit](https://img.shields.io/badge/Streamlit-deployed-red)
+> An ML experiment tracking platform, built roadmap-step by roadmap-step, with real measurements at every turn.
 
-🔗 **Live demo:** https://autopilot-ml-x-v1-gprhnmfn2nhiemmsu8c6dp.streamlit.app/
+## What This Is
 
-## 📖 The Honest Story
+AutoPilot ML X is an ML experiment tracking project. v2 builds on v1.1 by adding Data Structures & Algorithms and SQL/Database engineering, with real tests and performance measurements.
 
-The audit showed that only 28 of the 80 planned steps were actually completed, and the original concurrency claim was also wrong. I tested the implementation, found the gaps, and fixed the concurrency issue instead of leaving the README claim unsupported.
+## Results
 
-Full details, real measured numbers, and all trade-offs are in [`docs/design.md`](docs/design.md) and the [ADRs](docs/adr/).
+- **18x faster index query**: 0.0523s → 0.0029s
+- **Dijkstra bug**: naive Dijkstra returned 2, correct answer (via Bellman-Ford) was 0, with negative edge weights
+- **AVL tree height**: 500 → 11, fixing the unbalanced tree problem
+- **Memoization**: 21,891 → 39 function calls (naive vs memoized Fibonacci)
+- **Greedy vs DP**: 13 vs DP's 14, proving the greedy choice was not optimal
 
-## ✨ Features
+## What Changed (v1.1 → v2)
 
-**v1.0 (shipped):**
-- **Async Data Ingestion** — reads CSV/JSON/Excel files using `asyncio.gather`
-- **Data Profiler** — auto-generates shape, dtypes, missing values, and statistical summary for any dataset
-- **`@pipeline` Decorator** — clean, automatic START/DONE logging with timing for any function
-- **Flask Upload API** — `/upload` endpoint validates files and returns the profile report as JSON
-- **OOP Ingestor** — `AutoPilotIngestor` class ties ingestion + profiling into one clean, reusable interface
+| | v1.1 | v2 |
+|---|---|---|
+| Steps | 1–80 | 81–173 |
+| Features | E1–E15 | F1–F12, G1–G12 |
+| Tests | 44 | 159 |
+| Focus | Ingestion & profiling engine | Data Structures & Algorithms, SQL & Databases |
 
-**v1.1 additions (E1–E15):**
-- **E1** Typed Dataset Records — `IngestResult`, `DatasetSchema`
-- **E2** Structured Logging + Text Cleaning — JSON logs, date detection, regex cleaning
-- **E3** The Metadata Store — SQLite profile history, foreign keys enforced
-- **E4** Python Craft — five classic traps reproduced and fixed
-- **E5** The DataSource Hierarchy — one polymorphic reader, one factory
-- **E6** Decorators, Context Managers, Caching — `@lru_cache`, proven rollback safety
-- **E7** Streaming Large Datasets — generators, 31x less peak memory
-- **E8** Concurrency Measured — the async claim disproven, threads win at 1.46x
-- **E9** NumPy Vectorised Profiling — 146.5x speedup over a loop
-- **E10** Pandas Deep Profiling — grouped stats, outer-join change reports
-- **E11** The Real Dashboard — Matplotlib/Seaborn/Plotly, theme-aware
-- **E12** External Data Enrichment — SHA256 fingerprinting, retry/backoff, `.env` secrets
-- **E13** Engineering Discipline — pre-commit (black/flake8/mypy/bandit), real PR cycle
-- **E14** LLM-Assisted Profile Summaries — verified against hallucination
-- **E15** Consolidation — packaging, documentation, this README
+## Known Limits
 
-## 📊 Measured Results
+- **PostgreSQL setup is blocked on this Windows machine** — port 5432 permission denied, persists even as Administrator, with Windows Defender/AV checked and ruled out. Steps 155–156 remain deferred; SQLite serves G1 onward instead.
+- **Step 169 (partitioning)** deferred — requires PostgreSQL's native partitioning.
+- **Step 170 (replication) and step 171's `pool_pre_ping` restart proof** deferred for the same reason. Connection pool exhaustion was measured on SQLite as an illustration of the pooling mechanism, not a clean PostgreSQL-equivalent number.
+- SQLite's FTS5 and JSON1 stand in for PostgreSQL's `tsvector` and `JSONB` throughout G11.
 
-| Metric | Result |
-|---|---|
-| Concurrency: shipped "async" vs threads | 1.5s → 1.0s (**1.46x** real speedup) |
-| Streaming vs whole-file memory (92MB file) | 275.3MB → 8.9MB (**31x** less) |
-| NumPy vectorised vs loop (1M values) | 133.92ms → 0.91ms (**146.5x**) |
-| SHA256 fingerprint (92MB file) | 0.165s |
-| flake8 findings | 21 → 0 |
-| mypy errors | 7 → 0 |
-| bandit findings | 62 → 0 |
-| Tests | 5 (v1.0) → **32** (v1.1) |
+## What I Learned
 
-Full tables and trade-offs: [`docs/design.md`](docs/design.md)
+DSA first and SQL second helped me connect concepts to real problems. The bugs, cross-machine work, and PostgreSQL blocker taught me to test honestly, document limits, and keep progressing.
 
-## 🏗️ Architecture
+## Architecture Decision Records
 
-Files → `source_for()` factory → polymorphic `DataSource` reader → `@pipeline`-wrapped profiler → SQLite (`runs` / `datasets` / `column_stats`) → dashboard / API.
-
-*A generated architecture diagram is a known gap in this version — tracked as a follow-up rather than hand-drawn, to keep every diagram in this project generated from code, not illustrated after the fact.*
-
-## 🛠️ Tech Stack
-
-Python 3.14 · asyncio · Pandas · NumPy · Matplotlib · Seaborn · Plotly · Flask · SQLite · Pydantic · pytest · Streamlit · pre-commit (black, flake8, mypy, bandit)
-
-## 🚀 How to Run
-
-```bash
-git clone https://github.com/dharunvishnu2006-ctrl/autopilot-ml-x.git
-cd autopilot-ml-x
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-streamlit run app.py
-```
-
-Run the full quality gate:
-```bash
-bash scripts/check.sh
-```
-
-## 📚 What I Learned
-
-I learned that testing and measuring can reveal problems that aren't obvious from the code. The async issue and fake-passing test especially taught me to question assumptions and verify behavior.
-
-## 🗺️ Roadmap
-
-v1.1 of 6 — Layer 1 (the data foundation) is complete: 80/80 steps.
-Next: **v2** adds data structures and SQL (steps 81–173) on top of this foundation.
-
-## 🔗 Links
-
-- 💻 Code: https://github.com/dharunvishnu2006-ctrl/autopilot-ml-x
-- 🌐 Live App: https://autopilot-ml-x-v1-gprhnmfn2nhiemmsu8c6dp.streamlit.app/
-- 📄 Design doc: [`docs/design.md`](docs/design.md)
-- 📋 Decision records: [`docs/adr/`](docs/adr/)
+- [ADR 006](docs/adr/006-migration-downgrade-data-loss.md) — Destructive Migration Downgrades
+- [ADR 007](docs/adr/007-trigger-vs-application-update.md) — Trigger vs Application-Level Update
+- [ADR 008](docs/adr/008-sqlite-workaround-vs-blocking.md) — SQLite Workaround vs PostgreSQL Block
