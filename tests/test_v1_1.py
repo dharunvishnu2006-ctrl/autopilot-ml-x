@@ -430,7 +430,7 @@ def test_all_shipped_versions_appear_in_detail():
 
     versions = load_versions()
     shipped = [v for v in versions if v["status"] == "shipped"]
-    assert len(shipped) == 2
+    assert len(shipped) == 3
 
 
 def test_adr_files_referenced_exist():
