@@ -439,6 +439,9 @@ def test_adr_files_referenced_exist():
     assert Path("docs/adr/001-datasource-hierarchy.md").exists()
     assert Path("docs/adr/002-sqlite-over-memory.md").exists()
     assert Path("docs/adr/003-threads-over-asyncio.md").exists()
+    assert Path("docs/adr/006-migration-downgrade-data-loss.md").exists()
+    assert Path("docs/adr/007-trigger-vs-application-update.md").exists()
+    assert Path("docs/adr/008-sqlite-workaround-vs-blocking.md").exists()
 
 
 def test_sidebar_includes_evolution():
