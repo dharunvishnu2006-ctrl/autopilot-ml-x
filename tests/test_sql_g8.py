@@ -13,6 +13,7 @@ def test_core_parameterized_query_returns_done_runs():
         rows = conn.execute(query, {"status": "done"}).fetchall()
     ids = {r[0] for r in rows}
     assert ids == {1, 2, 4}
+    engine.dispose()
 
 
 def test_orm_relationship_returns_correct_run_count():
@@ -20,6 +21,7 @@ def test_orm_relationship_returns_correct_run_count():
     with Session(engine) as session:
         baseline = session.query(Experiment).filter_by(name="baseline").first()
         assert len(baseline.runs) == 4
+    engine.dispose()
 
 
 def test_selectinload_matches_lazy_loading_result():
@@ -34,3 +36,4 @@ def test_selectinload_matches_lazy_loading_result():
             .all()
         }
     assert lazy_counts == eager_counts
+    engine.dispose()

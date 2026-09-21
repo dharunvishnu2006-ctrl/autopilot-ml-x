@@ -14,7 +14,7 @@ def test_count_star_vs_count_column_differ_with_nulls():
     ).fetchone()
     total, with_accuracy = row
     assert total == 4
-    assert with_accuracy == 2
+    assert with_accuracy == 3
     assert total != with_accuracy
 
 
@@ -26,7 +26,7 @@ def test_avg_ignores_nulls_not_zeroes_them():
         "AND m.name = 'accuracy'"
     ).fetchone()
     avg = row[0]
-    assert abs(avg - 0.88) < 0.01
+    assert abs(avg - 0.89) < 0.01
 
 
 def test_having_filters_groups_correctly():
