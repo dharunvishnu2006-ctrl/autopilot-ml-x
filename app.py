@@ -49,7 +49,7 @@ st.markdown(
     '<div class="gradient-title">🤖 AutoPilot ML X</div>',
     unsafe_allow_html=True,
 )
-st.markdown("v1 of 6 · Self-Healing MLOps Platform")
+st.markdown("v2 of 6 · Self-Healing MLOps Platform")
 
 
 def render_evolution():
@@ -107,6 +107,12 @@ def render_evolution():
         f"({repo}/docs/adr/002-sqlite-over-memory.md)\n"
         f"- [ADR 003 — Threads for ingestion, chosen by measurement]"
         f"({repo}/docs/adr/003-threads-over-asyncio.md)\n"
+        f"- [ADR 006 — Destructive migration downgrades]"
+        f"({repo}/docs/adr/006-migration-downgrade-data-loss.md)\n"
+        f"- [ADR 007 — Trigger vs application-level update]"
+        f"({repo}/docs/adr/007-trigger-vs-application-update.md)\n"
+        f"- [ADR 008 — SQLite workaround vs blocking on PostgreSQL]"
+        f"({repo}/docs/adr/008-sqlite-workaround-vs-blocking.md)\n"
     )
 
     st.subheader("⚠️ Known Limits")
