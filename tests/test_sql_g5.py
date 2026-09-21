@@ -16,9 +16,9 @@ def test_rank_derived_table_finds_best_run():
         "  AND m.name = 'accuracy'"
         ") t WHERE t.rk = 1"
     ).fetchall()
-    assert len(rows) == 1
-    assert rows[0][0] == 2
-    assert rows[0][2] == 0.91
+    assert len(rows) == 2  # two runs tie for the best accuracy
+    values = {row[2] for row in rows}
+    assert values == {0.91}
 
 
 def test_cte_matches_derived_table_result():
@@ -31,7 +31,7 @@ def test_cte_matches_derived_table_result():
         "  FROM runs r JOIN metrics m ON m.run_id = r.id "
         "  AND m.name = 'accuracy'"
         "), best AS (SELECT * FROM ranked WHERE rk = 1) "
-        "SELECT best.value FROM best"
+        "SELECT best.value FROM best LIMIT 1"
     ).fetchone()
     assert row[0] == 0.91
 

@@ -1,12 +1,4 @@
 import sqlite3
-import pytest
-
-
-@pytest.fixture
-def conn():
-    connection = sqlite3.connect("data/experiment_store.db")
-    yield connection
-    connection.close()
 
 
 def test_moving_average_grows_then_stabilizes(conn):

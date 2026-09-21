@@ -1,8 +1,4 @@
-import sqlite3
-
-
-def test_transaction_prevents_orphan_run():
-    conn = sqlite3.connect("data/experiment_store.db")
+def test_transaction_prevents_orphan_run(conn):
     conn.execute("DELETE FROM runs WHERE id = 999")
     conn.commit()
 
@@ -21,24 +17,19 @@ def test_transaction_prevents_orphan_run():
 
     row = conn.execute("SELECT id FROM runs WHERE id = 999").fetchone()
     assert row is None
-    conn.close()
 
 
-def test_parameterized_query_blocks_injection_payload():
-    conn = sqlite3.connect("data/experiment_store.db")
+def test_parameterized_query_blocks_injection_payload(conn):
     payload = "x' OR '1'='1"
     rows = conn.execute(
         "SELECT * FROM model_types WHERE name = :name",
         {"name": payload},
     ).fetchall()
     assert rows == []
-    conn.close()
 
 
-def test_injection_payload_would_have_worked_unsafely():
-    conn = sqlite3.connect("data/experiment_store.db")
+def test_injection_payload_would_have_worked_unsafely(conn):
     payload = "x' OR '1'='1"
     query = f"SELECT * FROM model_types WHERE name = '{payload}'"
     rows = conn.execute(query).fetchall()
     assert len(rows) > 1
-    conn.close()

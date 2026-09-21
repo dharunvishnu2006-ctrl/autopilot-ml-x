@@ -1,12 +1,4 @@
-import sqlite3
-
-
-def get_conn():
-    return sqlite3.connect("data/experiment_store.db")
-
-
-def test_rank_skips_after_tie_dense_rank_does_not():
-    conn = get_conn()
+def test_rank_skips_after_tie_dense_rank_does_not(conn):
     rows = conn.execute(
         "SELECT r.id, "
         "RANK() OVER (ORDER BY m.value DESC) AS rk, "
@@ -20,8 +12,7 @@ def test_rank_skips_after_tie_dense_rank_does_not():
     assert dense_ranks == [1, 1, 2]
 
 
-def test_lag_is_positional_not_value_aware():
-    conn = get_conn()
+def test_lag_is_positional_not_value_aware(conn):
     rows = conn.execute(
         "SELECT r.id, "
         "LAG(m.value) OVER (ORDER BY r.started_at) AS prev "
@@ -34,8 +25,7 @@ def test_lag_is_positional_not_value_aware():
     assert by_id[3] == 0.91
 
 
-def test_first_value_gives_same_baseline_to_every_row():
-    conn = get_conn()
+def test_first_value_gives_same_baseline_to_every_row(conn):
     rows = conn.execute(
         "SELECT r.id, "
         "FIRST_VALUE(m.value) OVER ("
@@ -48,8 +38,7 @@ def test_first_value_gives_same_baseline_to_every_row():
     assert baselines == {0.85}
 
 
-def test_percent_rank_bounds_are_zero_and_one():
-    conn = get_conn()
+def test_percent_rank_bounds_are_zero_and_one(conn):
     rows = conn.execute(
         "SELECT PERCENT_RANK() OVER (ORDER BY m.value DESC) "
         "FROM runs r JOIN metrics m ON m.run_id = r.id "
