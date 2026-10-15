@@ -5,7 +5,8 @@
 ![python](https://img.shields.io/badge/python-3.14-blue)
 
 > An ML experiment tracking platform, built roadmap-step by roadmap-step, with real measurements at every turn.
-
+## 🚀 Live Demo
+**[Try it live →](https://autopilot-ml-x-v1-gprhnmfn2nhiemmsu8c6dp.streamlit.app/)**
 ## What This Is
 
 AutoPilot ML X is an ML experiment tracking project. v2 builds on v1.1 by adding Data Structures & Algorithms and SQL/Database engineering, with real tests and performance measurements.
