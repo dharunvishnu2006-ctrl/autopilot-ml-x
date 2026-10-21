@@ -1,12 +1,4 @@
-import sqlite3
-
-
-def get_conn():
-    return sqlite3.connect("data/experiment_store.db")
-
-
-def test_count_star_vs_count_column_differ_with_nulls():
-    conn = get_conn()
+def test_count_star_vs_count_column_differ_with_nulls(conn):
     row = conn.execute(
         "SELECT COUNT(*), COUNT(m.value) FROM runs r "
         "LEFT JOIN metrics m ON m.run_id = r.id "
@@ -18,8 +10,7 @@ def test_count_star_vs_count_column_differ_with_nulls():
     assert total != with_accuracy
 
 
-def test_avg_ignores_nulls_not_zeroes_them():
-    conn = get_conn()
+def test_avg_ignores_nulls_not_zeroes_them(conn):
     row = conn.execute(
         "SELECT AVG(m.value) FROM runs r "
         "LEFT JOIN metrics m ON m.run_id = r.id "
@@ -29,8 +20,7 @@ def test_avg_ignores_nulls_not_zeroes_them():
     assert abs(avg - 0.89) < 0.01
 
 
-def test_having_filters_groups_correctly():
-    conn = get_conn()
+def test_having_filters_groups_correctly(conn):
     rows = conn.execute(
         "SELECT r.model_type_id, COUNT(*) FROM runs r "
         "JOIN metrics m ON m.run_id = r.id "
@@ -42,8 +32,7 @@ def test_having_filters_groups_correctly():
     assert len(rows) == 2
 
 
-def test_case_when_grades_correctly():
-    conn = get_conn()
+def test_case_when_grades_correctly(conn):
     rows = conn.execute(
         "SELECT r.id, "
         "CASE WHEN m.value > 0.95 THEN 'A' "

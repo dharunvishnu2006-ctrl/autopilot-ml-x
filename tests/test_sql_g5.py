@@ -1,12 +1,4 @@
-import sqlite3
-
-
-def get_conn():
-    return sqlite3.connect("data/experiment_store.db")
-
-
-def test_rank_derived_table_finds_best_run():
-    conn = get_conn()
+def test_rank_derived_table_finds_best_run(conn):
     rows = conn.execute(
         "SELECT * FROM ("
         "  SELECT r.id, r.experiment_id, m.value, "
@@ -21,8 +13,7 @@ def test_rank_derived_table_finds_best_run():
     assert values == {0.91}
 
 
-def test_cte_matches_derived_table_result():
-    conn = get_conn()
+def test_cte_matches_derived_table_result(conn):
     row = conn.execute(
         "WITH ranked AS ("
         "  SELECT r.id, r.experiment_id, m.value, "
@@ -36,8 +27,7 @@ def test_cte_matches_derived_table_result():
     assert row[0] == 0.91
 
 
-def test_recursive_calendar_has_no_gaps():
-    conn = get_conn()
+def test_recursive_calendar_has_no_gaps(conn):
     rows = conn.execute(
         "WITH RECURSIVE days(d) AS ("
         "  SELECT DATE('2026-01-01') "
