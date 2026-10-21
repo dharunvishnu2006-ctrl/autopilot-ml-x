@@ -62,7 +62,7 @@
       "steps": "81-173",
       "completion": 29,
       "tests": 159,
-      "steps_covered": 93,
+      "steps_covered": 173,
       "description": "Data structures + SQL feature store",
       "features": [
         "F1: The Run Index",
