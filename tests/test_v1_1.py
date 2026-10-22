@@ -404,10 +404,13 @@ def test_bug_lines_are_sentences_not_counts():
 
 
 def test_evolution_page_renders_without_error():
-    import importlib
-    import app
+    from streamlit.testing.v1 import AppTest
 
-    importlib.reload(app)
+    code = "import app\napp.render_evolution()"
+    at = AppTest.from_string(code, default_timeout=60).run()
+
+    assert not at.exception
+    assert len(at.title) == 1
 
 
 def test_known_limits_not_empty():
