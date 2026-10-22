@@ -177,3 +177,21 @@ Synthetic data is identified using F1's `source` column rule — never
 shown as real. PostgreSQL-specific replication (step 170) and the
 `pool_pre_ping` restart proof (step 171) remain deferred, alongside
 the existing blocker documented in §6.
+
+## Later (noted during the home page polish, 21-22 Oct 2026)
+
+- The benchmark test should build its own files in tmp_path instead
+  of needing scripts/make_benchmark_files.py run by hand.
+- Black (88 characters) and the 76-character rule disagree; 4 old
+  files still fail black (demo_trigger.py, setup_fts.py,
+  connection_pool_demo.py, test_compute_path.py).
+- Pin pyarrow to the live demo's version (24.0.0) and pin
+  python-dateutil, so the laptop and the live demo run the same.
+- versions.json is read 3 times on every page click.
+- The Profiler page does not save profiles, so "Datasets profiled"
+  reads 0; decide in which version it starts saving them.
+- Sentinel checks AutoPilot at /status, but the Flask API has no
+  /status route yet.
+- The mockup: save it as docs/design/target_look.png with the caption
+  "AI-generated mockup of the target look. Not the current app. Its
+  numbers, alerts, logins and compliance lines are not real."
