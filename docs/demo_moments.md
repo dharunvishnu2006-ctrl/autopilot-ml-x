@@ -1,0 +1,1 @@
+22 Oct 2026, home page polish: Every Home page card traces back to SQL-backed data in the experiment store, and the leaderboard clearly labels its results as synthetic rather than real model performance.
