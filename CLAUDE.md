@@ -1,6 +1,6 @@
 ## Project
 AutoPilot ML X: Self-healing MLOps platform. Current version: v2.
-This batch: test-database fix only (docs/specs/fix-test-db.md).
+This batch: home page polish only (docs/specs/polish-home.md).
 
 ## Commands
 - Run app: streamlit run app.py

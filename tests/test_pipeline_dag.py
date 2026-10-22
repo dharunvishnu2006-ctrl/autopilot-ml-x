@@ -1,7 +1,8 @@
-import sys 
-sys.path.insert(0, "scripts")  
-from pipeline_dag import (  # noqa: E402
-    Graph, bfs_reachable, has_cycle, topological_order
+from src.pipeline_dag import (
+    Graph,
+    bfs_reachable,
+    has_cycle,
+    topological_order,
 )
 
 

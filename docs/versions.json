@@ -5,7 +5,7 @@
       "status": "shipped",
       "colour": "#a855f7",
       "steps": "1-80",
-      "completion": 13,
+      "completion": 5,
       "description": "Foundation - async ingestion sprint",
       "features": [
         "Async Data Ingestion",
@@ -64,6 +64,7 @@
       "tests": 159,
       "steps_covered": 173,
       "description": "Data structures + SQL feature store",
+      "updates": ["Home page polish"],
       "features": [
         "F1: The Run Index",
         "F2: The Leaderboard",
