@@ -40,3 +40,24 @@ quirk, comparable to the unresolved PostgreSQL port 5432 issue — both may
 share a root cause in how this machine's OS/antivirus handles file locking.
 Revisit with Process Monitor (Sysinternals) to see exactly what holds the
 lock, or by testing on a completely different machine.
+
+**Resolved (21 Oct 2026):**
+
+**Resolved (21 Oct 2026):**
+pytest imported `scripts/test_bad_insert.py` because its name started with
+`test_`. Its top-level code ran an INSERT that the CHECK constraint
+rejected, but it never committed or closed the connection, so the write
+lock stayed open for the entire test run.
+My own key finding said every failing test wrote to the database and every
+passing test only read from it. A lock that blocks writes but lets reads
+through meant some connection was holding an open write transaction.
+The fix: pytest now only looks in tests(`testpaths` in pyproject.toml), and
+the two scripts were renamed to bad_insert.py and sql_g11.py.
+When pytest imports a script, `__name__` is not `"__main__"`, so the code
+under `if __name__ == "__main__":` does not run — no connection is opened,
+so no database lock is held.
+With the lock gone, `test_sql_g11.py` committed 0.97 and 0.01 into the
+shared database, so the tests that ran after it read contaminated data. The
+fix: every test now builds its own temporary database in `tmp_path`, so no
+test touches `data/experiment_store.db`.
+It was never the antivirus or this machine: it would fail on any computer.
