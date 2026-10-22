@@ -48,7 +48,7 @@ def today_line(version: str) -> str:
 
 def coming_next_lines() -> list[str]:
     # Format one line per module
-    return [f"- {text}: arrives in {v}" for v, text in COMING_NEXT]
+    return [f"- {text}- arrives in {v}" for v, text in COMING_NEXT]
 
 
 def foot_line(version: str, healthy: bool) -> str:
